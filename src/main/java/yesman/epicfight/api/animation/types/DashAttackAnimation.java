@@ -6,8 +6,8 @@ import net.minecraft.world.entity.Entity;
 import yesman.epicfight.api.animation.property.AnimationProperty.AttackAnimationProperty;
 import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.api.model.Model;
-import yesman.epicfight.api.utils.ExtendedDamageSource;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
+import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 
 public class DashAttackAnimation extends AttackAnimation {
 	public DashAttackAnimation(float convertTime, float antic, float preDelay, float contact, float recovery, @Nullable Collider collider, String index, String path, Model model) {
@@ -24,8 +24,8 @@ public class DashAttackAnimation extends AttackAnimation {
 	}
 	
 	@Override
-	public ExtendedDamageSource getExtendedDamageSource(LivingEntityPatch<?> entitypatch, Entity target, Phase phase) {
-		ExtendedDamageSource extSource = super.getExtendedDamageSource(entitypatch, target, phase);
+	public EpicFightDamageSource getExtendedDamageSource(LivingEntityPatch<?> entitypatch, Entity target, Phase phase) {
+		EpicFightDamageSource extSource = super.getExtendedDamageSource(entitypatch, target, phase);
 		extSource.setImpact(extSource.getImpact() * 1.333F);
 		return extSource;
 	}

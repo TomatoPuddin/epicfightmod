@@ -8,10 +8,10 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import yesman.epicfight.api.animation.property.AnimationProperty.AttackPhaseProperty;
 import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.api.model.Model;
-import yesman.epicfight.api.utils.ExtendedDamageSource;
-import yesman.epicfight.api.utils.math.ExtraDamageType;
-import yesman.epicfight.api.utils.math.ValueCorrector;
+import yesman.epicfight.api.utils.math.ExtraDamage;
+import yesman.epicfight.api.utils.math.ValueModifier;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
+import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 
 public class SpecialAttackAnimation extends AttackAnimation {
 	public SpecialAttackAnimation(float convertTime, float antic, float preDelay, float contact, float recovery, @Nullable Collider collider, String index, String path, Model model) {
@@ -23,13 +23,13 @@ public class SpecialAttackAnimation extends AttackAnimation {
 	}
 	
 	@Override
-	protected float getDamageTo(LivingEntityPatch<?> entitypatch, LivingEntity target, Phase phase, ExtendedDamageSource source) {
+	protected float getDamageTo(LivingEntityPatch<?> entitypatch, LivingEntity target, Phase phase, EpicFightDamageSource source) {
 		float f = entitypatch.getDamageTo(target, source, phase.hand);
 		int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.SWEEPING_EDGE, entitypatch.getOriginal());
-		ValueCorrector cor = new ValueCorrector(0, (i > 0) ? 1.0F + (float)i / (float)(i + 1.0F) : 1.0F, 0);
-		phase.getProperty(AttackPhaseProperty.DAMAGE).ifPresent((opt) -> cor.merge(opt));
+		ValueModifier cor = new ValueModifier(0, (i > 0) ? 1.0F + (float)i / (float)(i + 1.0F) : 1.0F, 0);
+		phase.getProperty(AttackPhaseProperty.DAMAGE_MODIFIER).ifPresent((opt) -> cor.merge(opt));
 		float totalDamage = cor.getTotalValue(f);
-		ExtraDamageType extraCalculator = phase.getProperty(AttackPhaseProperty.EXTRA_DAMAGE).orElse(null);
+		ExtraDamage extraCalculator = phase.getProperty(AttackPhaseProperty.EXTRA_DAMAGE).orElse(null);
 		
 		if (extraCalculator != null) {
 			totalDamage += extraCalculator.get(entitypatch.getOriginal(), target);

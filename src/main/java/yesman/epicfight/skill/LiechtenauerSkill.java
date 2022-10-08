@@ -14,7 +14,6 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.phys.Vec3;
 import yesman.epicfight.api.utils.AttackResult;
-import yesman.epicfight.api.utils.ExtendedDamageSource;
 import yesman.epicfight.client.ClientEngine;
 import yesman.epicfight.gameasset.Animations;
 import yesman.epicfight.gameasset.EpicFightSounds;
@@ -24,6 +23,7 @@ import yesman.epicfight.particle.HitParticleType;
 import yesman.epicfight.skill.SkillDataManager.SkillDataKey;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
+import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener.EventType;
 
 public class LiechtenauerSkill extends SpecialAttackSkill {
@@ -86,8 +86,8 @@ public class LiechtenauerSkill extends SpecialAttackSkill {
 					
 					float knockback = 0.25F;
 					
-					if (damageSource instanceof ExtendedDamageSource) {
-						knockback += Math.min(((ExtendedDamageSource)damageSource).getImpact() * 0.1F, 1.0F);
+					if (damageSource instanceof EpicFightDamageSource) {
+						knockback += Math.min(((EpicFightDamageSource)damageSource).getImpact() * 0.1F, 1.0F);
 					}
 					
 					if (damageSource.getDirectEntity() instanceof LivingEntity) {

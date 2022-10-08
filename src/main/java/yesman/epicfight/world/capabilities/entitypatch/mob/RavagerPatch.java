@@ -10,14 +10,14 @@ import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.client.animation.ClientAnimator;
 import yesman.epicfight.api.model.Model;
-import yesman.epicfight.api.utils.ExtendedDamageSource;
-import yesman.epicfight.api.utils.ExtendedDamageSource.StunType;
 import yesman.epicfight.gameasset.Animations;
 import yesman.epicfight.gameasset.EpicFightSounds;
 import yesman.epicfight.gameasset.MobCombatBehaviors;
 import yesman.epicfight.gameasset.Models;
 import yesman.epicfight.world.capabilities.entitypatch.Faction;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
+import yesman.epicfight.world.damagesource.EpicFightDamageSource;
+import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 import yesman.epicfight.world.entity.ai.goal.AnimatedAttackGoal;
 import yesman.epicfight.world.entity.ai.goal.TargetChasingGoal;
@@ -56,7 +56,7 @@ public class RavagerPatch extends MobPatch<Ravager> {
 	}
 	
 	@Override
-	public void onHurtSomeone(Entity target, InteractionHand handIn, ExtendedDamageSource damagesource, float amount, boolean succeed) {
+	public void onHurtSomeone(Entity target, InteractionHand handIn, EpicFightDamageSource damagesource, float amount, boolean succeed) {
 		super.onHurtSomeone(target, handIn, damagesource, amount, succeed);
 		
 		if (!succeed && this.original.getStunnedTick() > 0) {

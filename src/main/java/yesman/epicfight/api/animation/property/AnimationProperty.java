@@ -1,5 +1,6 @@
 package yesman.epicfight.api.animation.property;
 
+import java.util.Set;
 import java.util.function.Function;
 
 import net.minecraft.sounds.SoundEvent;
@@ -9,12 +10,13 @@ import yesman.epicfight.api.animation.TransformSheet;
 import yesman.epicfight.api.animation.types.ActionAnimation;
 import yesman.epicfight.api.animation.types.DynamicAnimation;
 import yesman.epicfight.api.animation.types.StaticAnimation;
-import yesman.epicfight.api.utils.ExtendedDamageSource.StunType;
 import yesman.epicfight.api.utils.HitEntityList.Priority;
-import yesman.epicfight.api.utils.math.ExtraDamageType;
-import yesman.epicfight.api.utils.math.ValueCorrector;
+import yesman.epicfight.api.utils.math.ExtraDamage;
+import yesman.epicfight.api.utils.math.ValueModifier;
 import yesman.epicfight.particle.HitParticleType;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
+import yesman.epicfight.world.damagesource.SourceTag;
+import yesman.epicfight.world.damagesource.StunType;
 
 public abstract class AnimationProperty<T> {
 	public static class StaticAnimationProperty<T> extends AnimationProperty<T> {
@@ -98,28 +100,28 @@ public abstract class AnimationProperty<T> {
 		public static final AttackAnimationProperty<Float> ATTACK_SPEED_FACTOR = new AttackAnimationProperty<Float> ();
 		
 		/**
-		 * This property determines the basis of the speed factor. Without this value, the basis is the total animation time.
+		 * This property determines the basis of the speed factor. Default basis is the total animation time.
 		 */
 		public static final AttackAnimationProperty<Float> BASIS_ATTACK_SPEED = new AttackAnimationProperty<Float> ();
 		
 		/**
-		 * This property adds colliders when detecting hit entity by @MultiCollider.
+		 * This property adds interpolated colliders when detecting colliding entities by using @MultiCollider.
 		 */
-		public static final AttackAnimationProperty<Integer> COLLIDER_ADDER = new AttackAnimationProperty<Integer> ();
+		public static final AttackAnimationProperty<Integer> EXTRA_COLLIDERS = new AttackAnimationProperty<Integer> ();
 	}
 	
 	public static class AttackPhaseProperty<T> extends AnimationProperty<T> {
-		public static final AttackPhaseProperty<ValueCorrector> MAX_STRIKES = new AttackPhaseProperty<ValueCorrector> ();
-		public static final AttackPhaseProperty<ValueCorrector> DAMAGE = new AttackPhaseProperty<ValueCorrector> ();
-		public static final AttackPhaseProperty<ExtraDamageType> EXTRA_DAMAGE = new AttackPhaseProperty<ExtraDamageType> ();
-		public static final AttackPhaseProperty<ValueCorrector> ARMOR_NEGATION = new AttackPhaseProperty<ValueCorrector> ();
-		public static final AttackPhaseProperty<ValueCorrector> IMPACT = new AttackPhaseProperty<ValueCorrector> ();
+		public static final AttackPhaseProperty<ValueModifier> MAX_STRIKES_MODIFIER = new AttackPhaseProperty<ValueModifier> ();
+		public static final AttackPhaseProperty<ValueModifier> DAMAGE_MODIFIER = new AttackPhaseProperty<ValueModifier> ();
+		public static final AttackPhaseProperty<ExtraDamage> EXTRA_DAMAGE = new AttackPhaseProperty<ExtraDamage> ();
+		public static final AttackPhaseProperty<ValueModifier> ARMOR_NEGATION_MODIFIER = new AttackPhaseProperty<ValueModifier> ();
+		public static final AttackPhaseProperty<ValueModifier> IMPACT_MODIFIER = new AttackPhaseProperty<ValueModifier> ();
 		public static final AttackPhaseProperty<StunType> STUN_TYPE = new AttackPhaseProperty<StunType> ();
 		public static final AttackPhaseProperty<SoundEvent> SWING_SOUND = new AttackPhaseProperty<SoundEvent> ();
 		public static final AttackPhaseProperty<SoundEvent> HIT_SOUND = new AttackPhaseProperty<SoundEvent> ();
 		public static final AttackPhaseProperty<RegistryObject<HitParticleType>> PARTICLE = new AttackPhaseProperty<RegistryObject<HitParticleType>> ();
 		public static final AttackPhaseProperty<Priority> HIT_PRIORITY = new AttackPhaseProperty<Priority> ();
-		public static final AttackPhaseProperty<Boolean> FINISHER = new AttackPhaseProperty<Boolean> ();
+		public static final AttackPhaseProperty<Set<SourceTag>> SOURCE_TAG = new AttackPhaseProperty<Set<SourceTag>> ();
 		public static final AttackPhaseProperty<Function<LivingEntityPatch<?>, Vec3>> SOURCE_LOCATION_PROVIDER = new AttackPhaseProperty<Function<LivingEntityPatch<?>, Vec3>> ();
 	}
 }

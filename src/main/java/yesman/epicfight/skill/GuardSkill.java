@@ -26,7 +26,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import yesman.epicfight.api.animation.types.EntityState;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.utils.AttackResult;
-import yesman.epicfight.api.utils.ExtendedDamageSource;
 import yesman.epicfight.client.gui.BattleModeGui;
 import yesman.epicfight.gameasset.Animations;
 import yesman.epicfight.gameasset.EpicFightSounds;
@@ -40,6 +39,7 @@ import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.capabilities.item.CapabilityItem.Styles;
 import yesman.epicfight.world.capabilities.item.CapabilityItem.WeaponCategories;
+import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.capabilities.item.WeaponCategory;
 import yesman.epicfight.world.entity.eventlistener.HurtEvent;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener.EventType;
@@ -193,8 +193,8 @@ public class GuardSkill extends Skill {
 					float impact = 0.5F;
 					float knockback = 0.25F;
 					
-					if (event.getDamageSource() instanceof ExtendedDamageSource) {
-						impact = ((ExtendedDamageSource)event.getDamageSource()).getImpact();
+					if (event.getDamageSource() instanceof EpicFightDamageSource) {
+						impact = ((EpicFightDamageSource)event.getDamageSource()).getImpact();
 						knockback += Math.min(impact * 0.1F, 1.0F);
 					}
 					

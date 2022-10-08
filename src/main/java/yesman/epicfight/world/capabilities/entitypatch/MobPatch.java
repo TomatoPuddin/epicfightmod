@@ -158,6 +158,16 @@ public abstract class MobPatch<T extends Mob> extends LivingEntityPatch<T> {
 	}
 	
 	@Override
+	public boolean attack(Entity target) {
+		
+		boolean isAlive = target.isAlive();
+		
+		this.original.doHurtTarget(target);
+		
+		return this.original.getLastHurtMob().is(target) && isAlive;
+	}
+	
+	@Override
 	public LivingEntity getTarget() {
 		return this.original.getTarget();
 	}

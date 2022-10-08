@@ -1,17 +1,17 @@
 package yesman.epicfight.api.utils.math;
 
-public class ValueCorrector {
+public class ValueModifier {
 	private float adders;
 	private float multipliers;
 	private float setters;
 	
-	public ValueCorrector(float adder, float multiplier, float setter) {
+	public ValueModifier(float adder, float multiplier, float setter) {
 		this.adders = adder;
 		this.multipliers = multiplier;
 		this.setters = setter;
 	}
 	
-	public void merge(ValueCorrector valueCorrector) {
+	public void merge(ValueModifier valueCorrector) {
 		this.adders += valueCorrector.adders;
 		this.multipliers *= valueCorrector.multipliers;
 		this.setters += valueCorrector.setters;
@@ -28,19 +28,19 @@ public class ValueCorrector {
 				: String.format("%.0f", this.setters);
 	}
 	
-	public static ValueCorrector empty() {
-		return new ValueCorrector(0.0F, 1.0F, 0.0F);
+	public static ValueModifier empty() {
+		return new ValueModifier(0.0F, 1.0F, 0.0F);
 	}
 	
-	public static ValueCorrector adder(float arg) {
-		return new ValueCorrector(arg, 1.0F, 0.0F);
+	public static ValueModifier adder(float arg) {
+		return new ValueModifier(arg, 1.0F, 0.0F);
 	}
 	
-	public static ValueCorrector multiplier(float arg) {
-		return new ValueCorrector(0.0F, arg, 0.0F);
+	public static ValueModifier multiplier(float arg) {
+		return new ValueModifier(0.0F, arg, 0.0F);
 	}
 	
-	public static ValueCorrector setter(float arg) {
-		return new ValueCorrector(0.0F, 1.0F, arg);
+	public static ValueModifier setter(float arg) {
+		return new ValueModifier(0.0F, 1.0F, arg);
 	}
 }

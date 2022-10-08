@@ -45,8 +45,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.utils.AttackResult;
-import yesman.epicfight.api.utils.ExtendedDamageSource;
-import yesman.epicfight.api.utils.ExtendedDamageSource.StunType;
 import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.network.EpicFightNetworkManager;
 import yesman.epicfight.network.client.CPPlayAnimation;
@@ -60,6 +58,8 @@ import yesman.epicfight.world.capabilities.entitypatch.mob.EndermanPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.capabilities.projectile.ProjectilePatch;
+import yesman.epicfight.world.damagesource.EpicFightDamageSource;
+import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.effect.EpicFightMobEffects;
 import yesman.epicfight.world.entity.eventlistener.HurtEvent;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener.EventType;
@@ -107,12 +107,12 @@ public class EntityEvents {
 	
 	@SubscribeEvent
 	public static void hurtEvent(LivingHurtEvent event) {
-		ExtendedDamageSource extendedDamageSource = null;
+		EpicFightDamageSource extendedDamageSource = null;
 		Entity trueSource = event.getSource().getEntity();
 		
 		if (trueSource != null) {
-			if (event.getSource() instanceof ExtendedDamageSource) {
-				extendedDamageSource = (ExtendedDamageSource) event.getSource();
+			if (event.getSource() instanceof EpicFightDamageSource) {
+				extendedDamageSource = (EpicFightDamageSource) event.getSource();
 			} else if (event.getSource() instanceof IndirectEntityDamageSource && event.getSource().getDirectEntity() != null) {
 				ProjectilePatch<?> projectileCap = event.getSource().getDirectEntity().getCapability(EpicFightCapabilities.CAPABILITY_PROJECTILE, null).orElse(null);
 				
@@ -257,12 +257,12 @@ public class EntityEvents {
 	public static void damageEvent(LivingDamageEvent event) {
 		Entity trueSource = event.getSource().getEntity();
 		
-		if (event.getSource() instanceof ExtendedDamageSource) {
+		if (event.getSource() instanceof EpicFightDamageSource) {
 			if (trueSource != null) {
 				LivingEntityPatch<?> attacker = (LivingEntityPatch<?>) trueSource.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
 				
 				if (attacker != null) {
-					attacker.gatherDamageDealt((ExtendedDamageSource) event.getSource(), event.getAmount());
+					attacker.gatherDamageDealt((EpicFightDamageSource) event.getSource(), event.getAmount());
 				}
 			}
 		}

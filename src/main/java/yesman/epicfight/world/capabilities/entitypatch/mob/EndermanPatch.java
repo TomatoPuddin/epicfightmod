@@ -30,8 +30,6 @@ import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.client.animation.ClientAnimator;
 import yesman.epicfight.api.model.Model;
 import yesman.epicfight.api.utils.AttackResult;
-import yesman.epicfight.api.utils.ExtendedDamageSource;
-import yesman.epicfight.api.utils.ExtendedDamageSource.StunType;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Animations;
 import yesman.epicfight.gameasset.MobCombatBehaviors;
@@ -42,6 +40,8 @@ import yesman.epicfight.network.server.SPSpawnData;
 import yesman.epicfight.particle.EpicFightParticles;
 import yesman.epicfight.world.capabilities.entitypatch.Faction;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
+import yesman.epicfight.world.damagesource.EpicFightDamageSource;
+import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.effect.EpicFightMobEffects;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 import yesman.epicfight.world.entity.ai.goal.AnimatedAttackGoal;
@@ -159,10 +159,10 @@ public class EndermanPatch extends MobPatch<EnderMan> {
 	public AttackResult tryHurt(DamageSource damageSource, float amount) {
 		if (!this.original.level.isClientSide()) {
 			if (damageSource instanceof EntityDamageSource && !this.isRaging()) {
-				ExtendedDamageSource extDamageSource = null;
+				EpicFightDamageSource extDamageSource = null;
 				
-				if (damageSource instanceof ExtendedDamageSource) {
-					extDamageSource = ((ExtendedDamageSource)damageSource);
+				if (damageSource instanceof EpicFightDamageSource) {
+					extDamageSource = ((EpicFightDamageSource)damageSource);
 				}
 				
 				if (extDamageSource == null || extDamageSource.getStunType() != StunType.HOLD) {

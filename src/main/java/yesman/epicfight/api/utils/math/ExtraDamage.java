@@ -2,18 +2,18 @@ package yesman.epicfight.api.utils.math;
 
 import net.minecraft.world.entity.LivingEntity;
 
-public class ExtraDamageType {
+public class ExtraDamage {
 	public static final CalculatorType PERCENT_OF_TARGET_LOST_HEALTH = new CalculatorType((attacker, target, arg) ->
 		(target.getMaxHealth() - target.getHealth()) * arg, "skill.epicfight.percent_of_target_lost_health");
 	
-	public static ExtraDamageType get(CalculatorType calculator, float argument) {
-		return new ExtraDamageType(calculator, argument);
+	public static ExtraDamage get(CalculatorType calculator, float argument) {
+		return new ExtraDamage(calculator, argument);
 	}
 	
 	private CalculatorType calculator;
 	private float argument;
 	
-	public ExtraDamageType(CalculatorType calculator, float argument) {
+	public ExtraDamage(CalculatorType calculator, float argument) {
 		this.calculator = calculator;
 		this.argument = argument;
 	}

@@ -7,9 +7,9 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import yesman.epicfight.api.utils.ExtendedDamageSource;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.gameasset.MobCombatBehaviors;
+import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.entity.ai.goal.AnimatedAttackGoal;
 import yesman.epicfight.world.entity.ai.goal.TargetChasingGoal;
 
@@ -22,7 +22,7 @@ public class CaveSpiderPatch<T extends PathfinderMob> extends SpiderPatch<T> {
 	}
 	
 	@Override
-	public void onHurtSomeone(Entity target, InteractionHand handIn, ExtendedDamageSource source, float amount, boolean succeed) {
+	public void onHurtSomeone(Entity target, InteractionHand handIn, EpicFightDamageSource source, float amount, boolean succeed) {
 		if (succeed && target instanceof LivingEntity) {
 			int i = 0;
 			

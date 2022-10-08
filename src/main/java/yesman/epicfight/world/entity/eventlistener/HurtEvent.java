@@ -2,8 +2,8 @@ package yesman.epicfight.world.entity.eventlistener;
 
 import net.minecraft.world.damagesource.DamageSource;
 import yesman.epicfight.api.utils.AttackResult;
-import yesman.epicfight.api.utils.ExtendedDamageSource;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
+import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 
 public abstract class HurtEvent<T> extends PlayerEvent<ServerPlayerPatch> {
 	private final T damageSource;
@@ -43,8 +43,8 @@ public abstract class HurtEvent<T> extends PlayerEvent<ServerPlayerPatch> {
 		}
 	}
 	
-	public static class Post extends HurtEvent<ExtendedDamageSource> {
-		public Post(ServerPlayerPatch playerpatch, ExtendedDamageSource damageSource, float amount) {
+	public static class Post extends HurtEvent<EpicFightDamageSource> {
+		public Post(ServerPlayerPatch playerpatch, EpicFightDamageSource damageSource, float amount) {
 			super(playerpatch, damageSource, amount);
 		}
 	}

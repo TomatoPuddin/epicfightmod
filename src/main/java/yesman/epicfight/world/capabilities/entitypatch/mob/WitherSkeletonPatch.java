@@ -13,7 +13,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.model.Model;
-import yesman.epicfight.api.utils.ExtendedDamageSource;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Animations;
@@ -22,6 +21,7 @@ import yesman.epicfight.gameasset.Models;
 import yesman.epicfight.world.capabilities.entitypatch.Faction;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.capabilities.item.CapabilityItem.WeaponCategories;
+import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 
 public class WitherSkeletonPatch<T extends PathfinderMob> extends SkeletonPatch<T> {
@@ -55,7 +55,7 @@ public class WitherSkeletonPatch<T extends PathfinderMob> extends SkeletonPatch<
 	}
 	
 	@Override
-	public void onHurtSomeone(Entity target, InteractionHand handIn, ExtendedDamageSource source, float amount, boolean succeed) {
+	public void onHurtSomeone(Entity target, InteractionHand handIn, EpicFightDamageSource source, float amount, boolean succeed) {
 		if (succeed && target instanceof LivingEntity && this.original.getRandom().nextInt(10) == 0) {
 			((LivingEntity)target).addEffect(new MobEffectInstance(MobEffects.WITHER, 200));
 		}

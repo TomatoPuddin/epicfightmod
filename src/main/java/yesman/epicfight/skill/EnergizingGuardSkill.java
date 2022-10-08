@@ -10,7 +10,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import yesman.epicfight.api.utils.AttackResult;
-import yesman.epicfight.api.utils.ExtendedDamageSource;
 import yesman.epicfight.gameasset.Animations;
 import yesman.epicfight.gameasset.Skills;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
@@ -19,6 +18,8 @@ import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.capabilities.item.CapabilityItem.Styles;
 import yesman.epicfight.world.capabilities.item.CapabilityItem.WeaponCategories;
+import yesman.epicfight.world.damagesource.EpicFightDamageSource;
+import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.entity.eventlistener.HurtEvent;
 
 public class EnergizingGuardSkill extends GuardSkill {
@@ -51,8 +52,8 @@ public class EnergizingGuardSkill extends GuardSkill {
 		event.setAmount(isSpecialSource ? event.getAmount() * 0.2F : 0.0F);
 		event.setResult(isSpecialSource ? AttackResult.ResultType.SUCCESS : AttackResult.ResultType.BLOCKED);
 		
-		if (event.getDamageSource() instanceof ExtendedDamageSource) {
-			((ExtendedDamageSource)event.getDamageSource()).setStunType(ExtendedDamageSource.StunType.NONE);
+		if (event.getDamageSource() instanceof EpicFightDamageSource) {
+			((EpicFightDamageSource)event.getDamageSource()).setStunType(StunType.NONE);
 		}
 		
 		event.setCanceled(true);

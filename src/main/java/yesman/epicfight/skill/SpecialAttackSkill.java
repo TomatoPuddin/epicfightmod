@@ -26,10 +26,10 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import yesman.epicfight.api.animation.property.AnimationProperty.AttackPhaseProperty;
-import yesman.epicfight.api.utils.ExtendedDamageSource.StunType;
-import yesman.epicfight.api.utils.math.ValueCorrector;
+import yesman.epicfight.api.utils.math.ValueModifier;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
+import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 
 public abstract class SpecialAttackSkill extends Skill {
@@ -71,10 +71,10 @@ public abstract class SpecialAttackSkill extends Skill {
 		double armorNegation = playerpatch.getOriginal().getAttribute(EpicFightAttributes.ARMOR_NEGATION.get()).getBaseValue();
 		double impact = playerpatch.getOriginal().getAttribute(EpicFightAttributes.IMPACT.get()).getBaseValue();
 		double maxStrikes = playerpatch.getOriginal().getAttribute(EpicFightAttributes.MAX_STRIKES.get()).getBaseValue();
-		ValueCorrector damageCorrector = ValueCorrector.empty();
-		ValueCorrector armorNegationCorrector = ValueCorrector.empty();
-		ValueCorrector impactCorrector = ValueCorrector.empty();
-		ValueCorrector maxStrikesCorrector = ValueCorrector.empty();
+		ValueModifier damageModifier = ValueModifier.empty();
+		ValueModifier armorNegationModifier = ValueModifier.empty();
+		ValueModifier impactModifier = ValueModifier.empty();
+		ValueModifier maxStrikesModifier = ValueModifier.empty();
 		
 		for (AttributeModifier modifier : attributes.get(Attributes.ATTACK_DAMAGE)) {
 			damage += modifier.getAmount();
@@ -89,17 +89,17 @@ public abstract class SpecialAttackSkill extends Skill {
 			maxStrikes += modifier.getAmount();
 		}
 		
-		this.getProperty(AttackPhaseProperty.DAMAGE, propertyMap).ifPresent(damageCorrector::merge);
-		this.getProperty(AttackPhaseProperty.ARMOR_NEGATION, propertyMap).ifPresent(armorNegationCorrector::merge);
-		this.getProperty(AttackPhaseProperty.IMPACT, propertyMap).ifPresent(impactCorrector::merge);
-		this.getProperty(AttackPhaseProperty.MAX_STRIKES, propertyMap).ifPresent(maxStrikesCorrector::merge);
+		this.getProperty(AttackPhaseProperty.DAMAGE_MODIFIER, propertyMap).ifPresent(damageModifier::merge);
+		this.getProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, propertyMap).ifPresent(armorNegationModifier::merge);
+		this.getProperty(AttackPhaseProperty.IMPACT_MODIFIER, propertyMap).ifPresent(impactModifier::merge);
+		this.getProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER, propertyMap).ifPresent(maxStrikesModifier::merge);
 		
-		impactCorrector.merge(ValueCorrector.multiplier(1.0F + EnchantmentHelper.getItemEnchantmentLevel(Enchantments.KNOCKBACK, itemStack) * 0.12F));
+		impactModifier.merge(ValueModifier.multiplier(1.0F + EnchantmentHelper.getItemEnchantmentLevel(Enchantments.KNOCKBACK, itemStack) * 0.12F));
 		
-		damage = damageCorrector.getTotalValue(playerpatch.getModifiedDamage(null, null, (float)damage));
-		armorNegation = armorNegationCorrector.getTotalValue((float)armorNegation);
-		impact = impactCorrector.getTotalValue((float)impact);
-		maxStrikes = maxStrikesCorrector.getTotalValue((float)maxStrikes);
+		damage = damageModifier.getTotalValue(playerpatch.getModifiedDamage(null, null, (float)damage));
+		armorNegation = armorNegationModifier.getTotalValue((float)armorNegation);
+		impact = impactModifier.getTotalValue((float)impact);
+		maxStrikes = maxStrikesModifier.getTotalValue((float)maxStrikes);
 		
 		list.add(new TextComponent(title).withStyle(ChatFormatting.UNDERLINE).withStyle(ChatFormatting.GRAY));
 		
