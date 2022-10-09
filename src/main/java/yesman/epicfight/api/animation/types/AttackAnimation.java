@@ -194,7 +194,6 @@ public class AttackAnimation extends ActionAnimation {
 		if (list.size() > 0) {
 			HitEntityList hitEntities = new HitEntityList(entitypatch, list, phase.getProperty(AttackPhaseProperty.HIT_PRIORITY).orElse(HitEntityList.Priority.DISTANCE));
 			int maxStrikes = this.getMaxStrikes(entitypatch, phase);
-			entitypatch.getOriginal().setLastHurtMob(list.get(0));
 			
 			while (entitypatch.currentlyAttackedEntity.size() < maxStrikes && hitEntities.next()) {
 				Entity e = hitEntities.getEntity();
@@ -204,16 +203,16 @@ public class AttackAnimation extends ActionAnimation {
 					if (e instanceof LivingEntity || e instanceof PartEntity) {
 						if (entity.hasLineOfSight(e)) {
 							EpicFightDamageSource source = this.getExtendedDamageSource(entitypatch, e, phase);
-							AttackResult attackResult = entitypatch.tryHarm(e, source, this.getDamageTo(entitypatch, trueEntity, phase, source));
-							boolean count = attackResult.resultType.count();
+							//AttackResult attackResult = entitypatch.tryHarm(e, source, this.getDamageTo(entitypatch, trueEntity, phase, source));
+							//boolean count = attackResult.resultType.count();
 							
-							if (attackResult.resultType.dealtDamage()) {
+							//if (attackResult.resultType.dealtDamage()) {
 								int prevInvulTime = e.invulnerableTime;
 								e.invulnerableTime = 0;
-								boolean attackSuccess = entitypatch.attack(e);
+								AttackResult attackResult = entitypatch.attack(source, e);
 								e.invulnerableTime = prevInvulTime;
 								
-								if (attackSuccess) {
+								if (attackResult.resultType.dealtDamage()) {
 									if (entitypatch instanceof ServerPlayerPatch) {
 										ServerPlayerPatch playerpatch = ((ServerPlayerPatch)entitypatch);
 										playerpatch.getEventListener().triggerEvents(EventType.DEALT_DAMAGE_EVENT_POST, new DealtDamageEvent<>(playerpatch, trueEntity, source, attackResult.damage));
@@ -222,9 +221,9 @@ public class AttackAnimation extends ActionAnimation {
 									e.level.playSound(null, e.getX(), e.getY(), e.getZ(), this.getHitSound(entitypatch, phase), e.getSoundSource(), 1.0F, 1.0F);
 									this.spawnHitParticle(((ServerLevel)e.level), entitypatch, e, phase);
 								}
-							}
+							//}
 							
-							if (count) {
+							if (attackResult.resultType.shouldCount()) {
 								entitypatch.currentlyAttackedEntity.add(trueEntity);
 							}
 						}

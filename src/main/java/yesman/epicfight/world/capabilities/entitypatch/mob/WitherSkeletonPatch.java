@@ -5,11 +5,6 @@ import java.util.Set;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.model.Model;
@@ -21,7 +16,6 @@ import yesman.epicfight.gameasset.Models;
 import yesman.epicfight.world.capabilities.entitypatch.Faction;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.capabilities.item.CapabilityItem.WeaponCategories;
-import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 
 public class WitherSkeletonPatch<T extends PathfinderMob> extends SkeletonPatch<T> {
@@ -52,13 +46,6 @@ public class WitherSkeletonPatch<T extends PathfinderMob> extends SkeletonPatch<
 	@Override
 	public void updateMotion(boolean considerInaction) {
 		super.commonAggressiveMobUpdateMotion(considerInaction);
-	}
-	
-	@Override
-	public void onHurtSomeone(Entity target, InteractionHand handIn, EpicFightDamageSource source, float amount, boolean succeed) {
-		if (succeed && target instanceof LivingEntity && this.original.getRandom().nextInt(10) == 0) {
-			((LivingEntity)target).addEffect(new MobEffectInstance(MobEffects.WITHER, 200));
-		}
 	}
 	
 	@Override

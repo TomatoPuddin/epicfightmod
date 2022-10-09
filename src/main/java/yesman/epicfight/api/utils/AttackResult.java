@@ -9,6 +9,10 @@ public class AttackResult {
 		this.damage = damage;
 	}
 	
+	public static AttackResult failed() {
+		return new AttackResult(ResultType.FAILED, 0);
+	}
+	
 	public static enum ResultType {
 		SUCCESS(true, true), FAILED(false, false), BLOCKED(false, true);
 		
@@ -24,7 +28,7 @@ public class AttackResult {
 			return this.dealtDamage;
 		}
 		
-		public boolean count() {
+		public boolean shouldCount() {
 			return this.countMaxStrikes;
 		}
 	}

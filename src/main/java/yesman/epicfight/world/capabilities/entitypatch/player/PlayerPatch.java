@@ -18,6 +18,7 @@ import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.client.animation.ClientAnimator;
 import yesman.epicfight.api.model.Model;
+import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.api.utils.math.Formulars;
 import yesman.epicfight.gameasset.Animations;
 import yesman.epicfight.gameasset.Models;
@@ -209,11 +210,10 @@ public abstract class PlayerPatch<T extends Player> extends LivingEntityPatch<T>
 	}
 	
 	@Override
-	public boolean attack(Entity target) {
+	public AttackResult attack(EpicFightDamageSource damageSource, Entity target) {
 		// Prevents crit and sweeping edge effect
 		float fallDist = this.original.fallDistance;
 		boolean isOnGround = this.original.onGround;
-		boolean isAlive = target.isAlive();
 		
 		this.original.attackStrengthTicker = Integer.MAX_VALUE;
 		this.original.fallDistance = 0.0F;
@@ -222,7 +222,7 @@ public abstract class PlayerPatch<T extends Player> extends LivingEntityPatch<T>
 		this.original.fallDistance = fallDist;
 		this.original.onGround = isOnGround;
 		
-		return this.original.getLastHurtMob().is(target) && isAlive;
+		return super.attack(damageSource, target);
 	}
 	
 	@Override

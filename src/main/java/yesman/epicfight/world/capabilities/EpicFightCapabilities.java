@@ -1,11 +1,13 @@
 package yesman.epicfight.world.capabilities;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import yesman.epicfight.world.capabilities.entitypatch.EntityPatch;
+import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.capabilities.projectile.ProjectilePatch;
 import yesman.epicfight.world.capabilities.skill.CapabilitySkill;
@@ -26,5 +28,15 @@ public class EpicFightCapabilities {
 	
 	public static CapabilityItem getItemStackCapability(ItemStack stack) {
 		return stack.isEmpty() ? CapabilityItem.EMPTY : stack.getCapability(CAPABILITY_ITEM, null).orElse(CapabilityItem.EMPTY);
+	}
+	
+	public static <T extends EntityPatch> T getEntityPatch(Entity entity, Class<T> type) {
+		EntityPatch entitypatch = entity.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null);
+		
+		if (entitypatch.getClass().isAssignableFrom(type)) {
+			return (T)entitypatch;
+		}
+		
+		return null;
 	}
 }

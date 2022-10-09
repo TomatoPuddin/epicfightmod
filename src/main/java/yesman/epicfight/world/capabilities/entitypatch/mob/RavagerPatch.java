@@ -10,6 +10,7 @@ import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.client.animation.ClientAnimator;
 import yesman.epicfight.api.model.Model;
+import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.gameasset.Animations;
 import yesman.epicfight.gameasset.EpicFightSounds;
 import yesman.epicfight.gameasset.MobCombatBehaviors;
@@ -62,6 +63,16 @@ public class RavagerPatch extends MobPatch<Ravager> {
 		if (!succeed && this.original.getStunnedTick() > 0) {
 			this.playAnimationSynchronized(Animations.RAVAGER_STUN, 0.0F);
 		}
+	}
+	
+	@Override
+	public AttackResult attack(EpicFightDamageSource damageSource, Entity target) {
+		this.tryHurt(null, getAttackDirectionPitch());
+		this.original.doHurtTarget(target);
+		
+		
+		
+		return (target.is(this.original.getLastHurtMob()) && target.isAlive()) ? this.getLastAttackResult() : AttackResult.failed();
 	}
 	
 	@Override

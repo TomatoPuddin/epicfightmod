@@ -41,6 +41,7 @@ import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionAddedEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionExpiryEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionRemoveEvent;
+import net.minecraftforge.event.entity.living.ShieldBlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import yesman.epicfight.api.animation.types.StaticAnimation;
@@ -291,6 +292,7 @@ public class EntityEvents {
 			}
 			
 			AttackResult result = entitypatch.tryHurt(damageSource, event.getAmount());
+			entitypatch.setLastAttackResult(result);
 			
 			if (!result.resultType.dealtDamage()) {
 				event.setCanceled(true);
@@ -302,6 +304,15 @@ public class EntityEvents {
 				
 				event.getEntity().hurt(damagesource, result.damage);
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public static void shieldBlockEvent(ShieldBlockEvent event) {
+		LivingEntityPatch<?> entitypatch = (LivingEntityPatch<?>)event.getDamageSource().getEntity().getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null);
+		
+		if (entitypatch != null) {
+			
 		}
 	}
 	

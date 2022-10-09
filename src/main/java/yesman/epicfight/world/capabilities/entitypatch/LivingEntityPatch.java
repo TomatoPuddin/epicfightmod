@@ -42,6 +42,7 @@ import yesman.epicfight.api.client.animation.ClientAnimator;
 import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.api.model.Model;
 import yesman.epicfight.api.utils.AttackResult;
+import yesman.epicfight.api.utils.AttackResult.ResultType;
 import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.gameasset.Models;
@@ -68,6 +69,8 @@ public abstract class LivingEntityPatch<T extends LivingEntity> extends EntityPa
 	public LivingMotion currentCompositeMotion = LivingMotions.IDLE;
 	public List<LivingEntity> currentlyAttackedEntity;
 	protected Vec3 lastAttackPosition;
+	private ResultType lastResultType;
+	private float lastDealDamage;
 	
 	@Override
 	public void onConstructed(T entityIn) {
@@ -174,9 +177,6 @@ public abstract class LivingEntityPatch<T extends LivingEntity> extends EntityPa
 	}
 	
 	public AttackResult tryHurt(DamageSource damageSource, float amount) {
-		
-		System.out.println("try hurt");
-		
 		if (this.getEntityState().invulnerableTo(damageSource)) {
 			return new AttackResult(AttackResult.ResultType.FAILED, amount);
 		}
@@ -190,10 +190,20 @@ public abstract class LivingEntityPatch<T extends LivingEntity> extends EntityPa
 		return result;
 	}
 	
-	public boolean attack(Entity target) {
-		return false;
+	public void setLastAttackResult(AttackResult attackResult) {
+		this.lastResultType = attackResult.resultType;
+		this.lastDealDamage = attackResult.damage;
 	}
 	
+	public AttackResult getLastAttackResult() {
+		return new AttackResult(this.lastResultType, this.lastDealDamage);
+	}
+	
+	public AttackResult attack(EpicFightDamageSource damageSource, Entity target) {
+		return (target.is(this.original.getLastHurtMob()) && target.isAlive()) ? this.getLastAttackResult() : AttackResult.failed();
+	}
+	
+	/**
 	public void onHurtSomeone(Entity target, InteractionHand handIn, EpicFightDamageSource damagesource, float amount, boolean succeed) {
 		int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_ASPECT, this.getValidItemInHand(handIn));
 		
@@ -204,7 +214,7 @@ public abstract class LivingEntityPatch<T extends LivingEntity> extends EntityPa
 				target.setSecondsOnFire(j * 4);
 			}
 		}
-	}
+	}**/
 	
 	public boolean onDrop(LivingDropsEvent event) {
 		return false;

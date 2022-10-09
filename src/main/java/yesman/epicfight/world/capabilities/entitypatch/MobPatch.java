@@ -21,11 +21,13 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.client.animation.Layer;
+import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.network.EpicFightNetworkManager;
 import yesman.epicfight.network.server.SPSetAttackTarget;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
+import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 import yesman.epicfight.world.entity.ai.goal.AnimatedAttackGoal;
 import yesman.epicfight.world.entity.ai.goal.TargetChasingGoal;
@@ -158,13 +160,11 @@ public abstract class MobPatch<T extends Mob> extends LivingEntityPatch<T> {
 	}
 	
 	@Override
-	public boolean attack(Entity target) {
-		
-		boolean isAlive = target.isAlive();
-		
+	public AttackResult attack(EpicFightDamageSource damageSource, Entity target) {
+		this.tryHurt(null, getAttackDirectionPitch());
 		this.original.doHurtTarget(target);
 		
-		return this.original.getLastHurtMob().is(target) && isAlive;
+		return super.attack(damageSource, target);
 	}
 	
 	@Override
