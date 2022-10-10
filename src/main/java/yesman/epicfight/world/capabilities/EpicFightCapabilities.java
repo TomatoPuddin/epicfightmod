@@ -7,7 +7,6 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import yesman.epicfight.world.capabilities.entitypatch.EntityPatch;
-import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.capabilities.projectile.ProjectilePatch;
 import yesman.epicfight.world.capabilities.skill.CapabilitySkill;
@@ -30,10 +29,22 @@ public class EpicFightCapabilities {
 		return stack.isEmpty() ? CapabilityItem.EMPTY : stack.getCapability(CAPABILITY_ITEM, null).orElse(CapabilityItem.EMPTY);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static <T extends EntityPatch> T getEntityPatch(Entity entity, Class<T> type) {
-		EntityPatch entitypatch = entity.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null);
+		EntityPatch<?> entitypatch = entity.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null);
 		
-		if (entitypatch.getClass().isAssignableFrom(type)) {
+		if (type.isAssignableFrom(entitypatch.getClass())) {
+			return (T)entitypatch;
+		}
+		
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T extends ProjectilePatch> T getProjectilePatch(Entity entity, Class<T> type) {
+		ProjectilePatch<?> entitypatch = entity.getCapability(EpicFightCapabilities.CAPABILITY_PROJECTILE).orElse(null);
+		
+		if (type.isAssignableFrom(entitypatch.getClass())) {
 			return (T)entitypatch;
 		}
 		

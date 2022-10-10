@@ -14,7 +14,7 @@ import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener.EventType;
 
-public class LethalSlicingSkill extends SpecialAttackSkill {
+public class LethalSlicingSkill extends WeaponInnateSkill {
 	private static final UUID EVENT_UUID = UUID.fromString("bfa79c04-97a5-11eb-a8b3-0242ac130003");
 	private AttackAnimation elbow;
 	private AttackAnimation swing;
@@ -62,7 +62,7 @@ public class LethalSlicingSkill extends SpecialAttackSkill {
 	}
 	
 	@Override
-	public SpecialAttackSkill registerPropertiesToAnimation() {
+	public WeaponInnateSkill registerPropertiesToAnimation() {
 		this.elbow.phases[0].addProperties(this.properties.get(0).entrySet());
 		this.swing.phases[0].addProperties(this.properties.get(1).entrySet());
 		this.doubleSwing.phases[0].addProperties(this.properties.get(1).entrySet());

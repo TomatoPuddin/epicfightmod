@@ -16,8 +16,9 @@ public class IndirectEpicFightDamageSource extends IndirectEntityDamageSource im
 	}
 	
 	@Override
-	public void setInitialPosition(Vec3 initialPosition) {
+	public EpicFightDamageSource setInitialPosition(Vec3 initialPosition) {
 		this.projectileInitialPosition = initialPosition;
+		return this;
 	}
 	
 	@Override

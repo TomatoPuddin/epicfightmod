@@ -75,13 +75,13 @@ public class ServerPlayerPatch extends PlayerPatch<ServerPlayer> {
 	@Override
 	public void gatherDamageDealt(EpicFightDamageSource source, float amount) {
 		if (source.isBasicAttack()) {
-			SkillContainer container = this.getSkill(SkillCategories.WEAPON_SPECIAL_ATTACK);
+			SkillContainer container = this.getSkill(SkillCategories.WEAPON_INNATE);
 			
-			if (!container.isFull() && container.hasSkill(this.getHoldingItemCapability(InteractionHand.MAIN_HAND).getSpecialAttack(this))) {
+			if (!container.isFull() && container.hasSkill(this.getHoldingItemCapability(InteractionHand.MAIN_HAND).getInnateSkill(this))) {
 				float value = container.getResource() + amount;
 				
 				if (value > 0.0F) {
-					this.getSkill(SkillCategories.WEAPON_SPECIAL_ATTACK).getSkill().setConsumptionSynchronize(this, value);
+					this.getSkill(SkillCategories.WEAPON_INNATE).getSkill().setConsumptionSynchronize(this, value);
 				}
 			}
 		}
@@ -100,7 +100,7 @@ public class ServerPlayerPatch extends PlayerPatch<ServerPlayer> {
 	@Override
 	public void updateHeldItem(CapabilityItem fromCap, CapabilityItem toCap, ItemStack from, ItemStack to, InteractionHand hand) {
 		CapabilityItem mainHandCap = (hand == InteractionHand.MAIN_HAND) ? toCap : this.getHoldingItemCapability(InteractionHand.MAIN_HAND);
-		mainHandCap.changeWeaponSpecialSkill(this);
+		mainHandCap.changeWeaponInnateSkill(this);
 		
 		if (hand == InteractionHand.OFF_HAND) {
 			if (!from.isEmpty()) {

@@ -4,25 +4,16 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.utils.math.ValueModifier;
 
 public interface EpicFightDamageSource {
-	public static EpicFightEntityDamageSource causePlayerDamage(Player player, StunType stunType, StaticAnimation animation, InteractionHand hand) {
-        return new EpicFightEntityDamageSource("player", player, stunType, animation, hand);
-    }
-	
-	public static EpicFightEntityDamageSource causeMobDamage(LivingEntity mob, StunType stunType, StaticAnimation animation) {
-        return new EpicFightEntityDamageSource("mob", mob, stunType, animation);
-    }
-	
-	public static EpicFightEntityDamageSource causeDamage(String msg, LivingEntity attacker, StunType stunType, StaticAnimation animation) {
-        return new EpicFightEntityDamageSource(msg, attacker, stunType, animation);
-    }
+	public static EpicFightEntityDamageSource commonEntityDamageSource(String msg, LivingEntity owner, StaticAnimation animation) {
+		return new EpicFightEntityDamageSource(msg, owner, animation);
+	}
 	
 	public DamageSourceElements getDamageSourceElements();
 	
@@ -82,7 +73,25 @@ public interface EpicFightDamageSource {
 		return false;
 	}
 	
-	public void setInitialPosition(Vec3 initialPosition);
+	default EpicFightDamageSource addExtraDamage(ExtraDamageInstance extraDamage) {
+		if (this.getDamageSourceElements().extraDamages == null) {
+			this.getDamageSourceElements().extraDamages = Sets.newHashSet();
+		}
+		
+		this.getDamageSourceElements().extraDamages.add(extraDamage);
+		
+		return this;
+	}
+	
+	default Set<ExtraDamageInstance> getExtraDamages() {
+		return this.getDamageSourceElements().extraDamages;
+	}
+	
+	default DamageSource cast() {
+		return (DamageSource)this;
+	}
+	
+	public EpicFightDamageSource setInitialPosition(Vec3 initialPosition);
 	public boolean isBasicAttack();
 	public int getAnimationId();
 }

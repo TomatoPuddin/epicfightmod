@@ -67,7 +67,7 @@ public class ControllEngine {
 		this.keyFunctions.put(this.options.keySwapOffhand, this::swapHandKeyPressed);
 		this.keyFunctions.put(EpicFightKeyMappings.SWITCH_MODE, this::switchModeKeyPressed);
 		this.keyFunctions.put(EpicFightKeyMappings.DODGE, this::dodgeKeyPressed);
-		this.keyFunctions.put(EpicFightKeyMappings.SPECIAL_SKILL, this::specialSkillKeyPressed);
+		this.keyFunctions.put(EpicFightKeyMappings.WEAPON_INNATE_SKILL, this::weaponInnateSkillKeyPressed);
 		
 		try {
 			this.keyHash = (KeyBindingMap) ObfuscationReflectionHelper.findField(KeyMapping.class, "f_90810_").get(null);
@@ -145,18 +145,18 @@ public class ControllEngine {
 		}
 	}
 	
-	private void specialSkillKeyPressed(KeyMapping key, int action) {
+	private void weaponInnateSkillKeyPressed(KeyMapping key, int action) {
 		if (action == 1 && this.playerpatch.isBattleMode()) {
 			if (key.getKey().getValue() != 0) {
-				if (!this.playerpatch.getSkill(SkillCategories.WEAPON_SPECIAL_ATTACK).sendExecuteRequest(this.playerpatch, this.packets)) {
+				if (!this.playerpatch.getSkill(SkillCategories.WEAPON_INNATE).sendExecuteRequest(this.playerpatch, this.packets)) {
 					if (!this.player.isSpectator()) {
-						this.reserveKey(SkillCategories.WEAPON_SPECIAL_ATTACK);
+						this.reserveKey(SkillCategories.WEAPON_INNATE);
 					}
 				} else {
 					this.lockHotkeys();
 				}
 			} else {
-				if (this.options.keyAttack.equals(EpicFightKeyMappings.SPECIAL_SKILL)) {
+				if (this.options.keyAttack.equals(EpicFightKeyMappings.WEAPON_INNATE_SKILL)) {
 					KeyMapping.click(this.options.keyAttack.getKey());
 				}
 			}
@@ -178,11 +178,11 @@ public class ControllEngine {
 				this.mouseLeftPressToggle = false;
 				this.mouseLeftPressCounter = 0;
 			} else {
-				if (EpicFightKeyMappings.SPECIAL_SKILL.getKey().equals(this.options.keyAttack.getKey())) {
+				if (EpicFightKeyMappings.WEAPON_INNATE_SKILL.getKey().equals(this.options.keyAttack.getKey())) {
 					if (this.mouseLeftPressCounter > EpicFightMod.CLIENT_INGAME_CONFIG.longPressCount.getValue()) {
-						if (!this.playerpatch.getSkill(SkillCategories.WEAPON_SPECIAL_ATTACK).sendExecuteRequest(this.playerpatch, this.packets)) {
+						if (!this.playerpatch.getSkill(SkillCategories.WEAPON_INNATE).sendExecuteRequest(this.playerpatch, this.packets)) {
 							if (!this.player.isSpectator()) {
-								this.reserveKey(SkillCategories.WEAPON_SPECIAL_ATTACK);
+								this.reserveKey(SkillCategories.WEAPON_INNATE);
 							}
 						} else {
 							this.lockHotkeys();

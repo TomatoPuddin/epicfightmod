@@ -26,7 +26,7 @@ import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener.EventType;
 
-public class LiechtenauerSkill extends SpecialAttackSkill {
+public class LiechtenauerSkill extends WeaponInnateSkill {
 	private static final UUID EVENT_UUID = UUID.fromString("244c57c0-a837-11eb-bcbc-0242ac130002");
 	private static final SkillDataKey<Integer> PARRY_MOTION_COUNTER = SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
 	
@@ -147,12 +147,12 @@ public class LiechtenauerSkill extends SpecialAttackSkill {
 		if (executer.isLogicalClient()) {
 			return super.canExecute(executer);
 		} else {
-			return executer.getHoldingItemCapability(InteractionHand.MAIN_HAND).getSpecialAttack(executer) == this && executer.getOriginal().getVehicle() == null;
+			return executer.getHoldingItemCapability(InteractionHand.MAIN_HAND).getInnateSkill(executer) == this && executer.getOriginal().getVehicle() == null;
 		}
 	}
 	
 	@Override
-	public SpecialAttackSkill registerPropertiesToAnimation() {
+	public WeaponInnateSkill registerPropertiesToAnimation() {
 		return this;
 	}
 	

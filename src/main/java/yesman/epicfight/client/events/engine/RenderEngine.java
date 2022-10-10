@@ -442,10 +442,10 @@ public class RenderEngine {
 				LocalPlayerPatch playerpatch = (LocalPlayerPatch) event.getPlayer().getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
 				
 				if (cap != null && playerpatch != null) {
-					if (ClientEngine.instance.controllEngine.isKeyDown(EpicFightKeyMappings.SPECIAL_SKILL_TOOLTIP)) {
-						if (cap.getSpecialAttack(playerpatch) != null) {
+					if (ClientEngine.instance.controllEngine.isKeyDown(EpicFightKeyMappings.WEAPON_INNATE_SKILL_TOOLTIP)) {
+						if (cap.getInnateSkill(playerpatch) != null) {
 							event.getToolTip().clear();
-							List<Component> skilltooltip = cap.getSpecialAttack(playerpatch).getTooltipOnItem(event.getItemStack(), cap, playerpatch);
+							List<Component> skilltooltip = cap.getInnateSkill(playerpatch).getTooltipOnItem(event.getItemStack(), cap, playerpatch);
 							
 							for (Component s : skilltooltip) {
 								event.getToolTip().add(s);

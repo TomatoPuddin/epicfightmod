@@ -8,8 +8,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class SpecialAttackKeyMapping extends KeyMapping {
-	public SpecialAttackKeyMapping(String description, InputConstants.Type type, int code, String category) {
+public class WeaponInnateSkillKeyMapping extends KeyMapping {
+	public WeaponInnateSkillKeyMapping(String description, InputConstants.Type type, int code, String category) {
 		super(description, type, code, category);
 	}
 	

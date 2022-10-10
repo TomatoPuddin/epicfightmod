@@ -1,5 +1,6 @@
 package yesman.epicfight.api.animation.property;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -11,10 +12,10 @@ import yesman.epicfight.api.animation.types.ActionAnimation;
 import yesman.epicfight.api.animation.types.DynamicAnimation;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.utils.HitEntityList.Priority;
-import yesman.epicfight.api.utils.math.ExtraDamage;
 import yesman.epicfight.api.utils.math.ValueModifier;
 import yesman.epicfight.particle.HitParticleType;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
+import yesman.epicfight.world.damagesource.ExtraDamageInstance;
 import yesman.epicfight.world.damagesource.SourceTag;
 import yesman.epicfight.world.damagesource.StunType;
 
@@ -73,11 +74,6 @@ public abstract class AnimationProperty<T> {
 		public static final ActionAnimationProperty<Boolean> CANCELABLE_MOVE = new ActionAnimationProperty<Boolean> ();
 	}
 	
-	@FunctionalInterface
-	public interface ActionAnimationCoordSetter {
-		public void set(DynamicAnimation self, LivingEntityPatch<?> entitypatch, TransformSheet transformSheet);
-	}
-	
 	public static class AttackAnimationProperty<T> extends AnimationProperty<T> {
 		/**
 		 * This property determines if the player's camera is fixed during the attacking phase.
@@ -110,10 +106,20 @@ public abstract class AnimationProperty<T> {
 		public static final AttackAnimationProperty<Integer> EXTRA_COLLIDERS = new AttackAnimationProperty<Integer> ();
 	}
 	
+	@FunctionalInterface
+	public interface ActionAnimationCoordSetter {
+		public void set(DynamicAnimation self, LivingEntityPatch<?> entitypatch, TransformSheet transformSheet);
+	}
+	
+	@FunctionalInterface
+	public interface Registerer<T> {
+		public void register(Map<AnimationProperty<T>, Object> properties, AnimationProperty<T> key, T object);
+	}
+	
 	public static class AttackPhaseProperty<T> extends AnimationProperty<T> {
 		public static final AttackPhaseProperty<ValueModifier> MAX_STRIKES_MODIFIER = new AttackPhaseProperty<ValueModifier> ();
 		public static final AttackPhaseProperty<ValueModifier> DAMAGE_MODIFIER = new AttackPhaseProperty<ValueModifier> ();
-		public static final AttackPhaseProperty<ExtraDamage> EXTRA_DAMAGE = new AttackPhaseProperty<ExtraDamage> ();
+		public static final AttackPhaseProperty<Set<ExtraDamageInstance>> EXTRA_DAMAGE = new AttackPhaseProperty<Set<ExtraDamageInstance>> ();
 		public static final AttackPhaseProperty<ValueModifier> ARMOR_NEGATION_MODIFIER = new AttackPhaseProperty<ValueModifier> ();
 		public static final AttackPhaseProperty<ValueModifier> IMPACT_MODIFIER = new AttackPhaseProperty<ValueModifier> ();
 		public static final AttackPhaseProperty<StunType> STUN_TYPE = new AttackPhaseProperty<StunType> ();

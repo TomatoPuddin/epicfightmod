@@ -110,8 +110,8 @@ public class BattleModeGui extends ModIngameGui {
 			SkillContainer container = playerpatch.getSkill(i);
 			if (container != null && !container.isEmpty()) {
 				SkillCategory slot = container.getSkill().getCategory();
-				if (slot == SkillCategories.WEAPON_SPECIAL_ATTACK) {
-					this.drawSpecialAttack(playerpatch, container, matStack, partialTicks);
+				if (slot == SkillCategories.WEAPON_INNATE) {
+					this.drawWeaponInnateIcon(playerpatch, container, matStack, partialTicks);
 				} else {
 					RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 					Skill skill = container.getSkill();
@@ -138,7 +138,7 @@ public class BattleModeGui extends ModIngameGui {
 			RenderSystem.disableBlend();
 	}
 	
-	private void drawSpecialAttack(LocalPlayerPatch playerpatch, SkillContainer container, PoseStack matStack, float partialTicks) {
+	private void drawWeaponInnateIcon(LocalPlayerPatch playerpatch, SkillContainer container, PoseStack matStack, float partialTicks) {
 		Window sr = Minecraft.getInstance().getWindow();
 		int width = sr.getGuiScaledWidth();
 		int height = sr.getGuiScaledHeight();

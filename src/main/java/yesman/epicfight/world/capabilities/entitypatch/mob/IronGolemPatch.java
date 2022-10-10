@@ -4,7 +4,6 @@ import java.util.Set;
 
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.MoveTowardsTargetGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
@@ -22,7 +21,6 @@ import yesman.epicfight.gameasset.MobCombatBehaviors;
 import yesman.epicfight.gameasset.Models;
 import yesman.epicfight.world.capabilities.entitypatch.Faction;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
-import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 import yesman.epicfight.world.entity.ai.goal.AnimatedAttackGoal;
@@ -99,12 +97,6 @@ public class IronGolemPatch extends MobPatch<IronGolem> {
 		return EpicFightSounds.WHOOSH_BIG;
 	}
 	
-	@Override
-	public float getDamageTo(Entity targetEntity, EpicFightDamageSource source, InteractionHand hand) {
-		float damage = super.getDamageTo(targetEntity, source, hand);
-		return (int)damage > 0 ? damage / 2.0F + (float)this.original.getRandom().nextInt((int)damage) : damage;
-	}
-
 	@Override
 	public StaticAnimation getHitAnimation(StunType stunType) {
 		return null;

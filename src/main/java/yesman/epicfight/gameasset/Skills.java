@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import com.google.common.collect.Maps;
 
@@ -12,7 +13,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModLoader;
 import yesman.epicfight.api.animation.property.AnimationProperty.AttackPhaseProperty;
 import yesman.epicfight.api.forgeevent.SkillRegistryEvent;
-import yesman.epicfight.api.utils.math.ExtraDamage;
 import yesman.epicfight.api.utils.math.ValueModifier;
 import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.particle.EpicFightParticles;
@@ -31,13 +31,14 @@ import yesman.epicfight.skill.KnockdownWakeupSkill;
 import yesman.epicfight.skill.LethalSlicingSkill;
 import yesman.epicfight.skill.LiechtenauerSkill;
 import yesman.epicfight.skill.PassiveSkill;
-import yesman.epicfight.skill.SimpleSpecialAttackSkill;
+import yesman.epicfight.skill.SimpleWeaponInnateSkill;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.Skill.ActivateType;
 import yesman.epicfight.skill.Skill.Resource;
+import yesman.epicfight.world.damagesource.ExtraDamageInstance;
 import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.skill.SkillCategories;
-import yesman.epicfight.skill.SpecialAttackSkill;
+import yesman.epicfight.skill.WeaponInnateSkill;
 import yesman.epicfight.skill.StaminaPillagerSkill;
 import yesman.epicfight.skill.StepSkill;
 import yesman.epicfight.skill.SwordmasterSkill;
@@ -99,7 +100,7 @@ public class Skills {
 	public static Skill STAMINA_PILLAGER;
 	public static Skill SWORD_MASTER;
 	public static Skill TECHNICIAN;
-	/** Special attack skills**/
+	/** Weapon innate skills**/
 	public static Skill GUILLOTINE_AXE;
 	public static Skill SWEEPING_EDGE;
 	public static Skill DANCING_EDGE;
@@ -118,6 +119,8 @@ public class Skills {
 	public static Skill GROUND_SLAM;
 	
 	public static void registerSkills() {
+		System.out.println("register skill start");
+		
 		BASIC_ATTACK = registerSkill(new BasicAttack(BasicAttack.createBuilder()));
 		AIR_ATTACK = registerSkill(new AirAttack(AirAttack.createBuilder()));
 		ROLL = registerSkill(new DodgeSkill(DodgeSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "roll")).setConsumption(4.0F).setAnimations(Animations.BIPED_ROLL_FORWARD, Animations.BIPED_ROLL_BACKWARD)));
@@ -133,54 +136,61 @@ public class Skills {
 		SWORD_MASTER = registerSkill(new SwordmasterSkill(PassiveSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "swordmaster"))));
 		TECHNICIAN = registerSkill(new TechnicianSkill(PassiveSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "technician"))));
 		
-		SWEEPING_EDGE = registerSkill(new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "sweeping_edge")).setConsumption(30.0F).setAnimations(Animations.SWEEPING_EDGE))
-				.newPropertyLine()
+		SWEEPING_EDGE = registerSkill(new SimpleWeaponInnateSkill(SimpleWeaponInnateSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "sweeping_edge")).setConsumption(30.0F).setAnimations(Animations.SWEEPING_EDGE))
+				.newProperty()
 				.addProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.adder(1))
 				.addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(2.0F))
 				.addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(20.0F))
 				.addProperty(AttackPhaseProperty.IMPACT_MODIFIER, ValueModifier.multiplier(1.6F))
 				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.LONG)
+				.addProperty(AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.SWEEPING_EDGE_ENCHANTMENT.create()))
 				.registerPropertiesToAnimation());
 		
-		DANCING_EDGE = registerSkill(new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "dancing_edge")).setConsumption(30.0F).setAnimations(Animations.DANCING_EDGE))
-				.newPropertyLine()
+		DANCING_EDGE = registerSkill(new SimpleWeaponInnateSkill(SimpleWeaponInnateSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "dancing_edge")).setConsumption(30.0F).setAnimations(Animations.DANCING_EDGE))
+				.newProperty()
 				.addProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.adder(1))
 				.addProperty(AttackPhaseProperty.IMPACT_MODIFIER, ValueModifier.multiplier(1.2F))
+				.addProperty(AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.SWEEPING_EDGE_ENCHANTMENT.create()))
 				.registerPropertiesToAnimation());
 		
-		GUILLOTINE_AXE = registerSkill(new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "guillotine_axe")).setConsumption(20.0F).setAnimations(Animations.GUILLOTINE_AXE))
-				.newPropertyLine()
+		GUILLOTINE_AXE = registerSkill(new SimpleWeaponInnateSkill(SimpleWeaponInnateSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "guillotine_axe")).setConsumption(20.0F).setAnimations(Animations.GUILLOTINE_AXE))
+				.newProperty()
 				.addProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1))
 				.addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(2.5F))
 				.addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(20.0F))
 				.addProperty(AttackPhaseProperty.IMPACT_MODIFIER, ValueModifier.multiplier(2.0F))
 				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.LONG)
+				.addProperty(AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.SWEEPING_EDGE_ENCHANTMENT.create()))
 				.registerPropertiesToAnimation());
 		
-		SLAUGHTER_STANCE = registerSkill(new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "slaughter_stance")).setConsumption(40.0F).setAnimations(Animations.SPEAR_SLASH))
-				.newPropertyLine()
+		SLAUGHTER_STANCE = registerSkill(new SimpleWeaponInnateSkill(SimpleWeaponInnateSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "slaughter_stance")).setConsumption(40.0F).setAnimations(Animations.SPEAR_SLASH))
+				.newProperty()
 				.addProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.adder(4))
 				.addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(1.25F))
 				.addProperty(AttackPhaseProperty.IMPACT_MODIFIER, ValueModifier.multiplier(1.2F))
+				.addProperty(AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.SWEEPING_EDGE_ENCHANTMENT.create()))
 				.registerPropertiesToAnimation());
 		
-		HEARTPIERCER = registerSkill(new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "heartpiercer")).setConsumption(40.0F).setAnimations(Animations.SPEAR_THRUST))
-				.newPropertyLine()
+		HEARTPIERCER = registerSkill(new SimpleWeaponInnateSkill(SimpleWeaponInnateSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "heartpiercer")).setConsumption(40.0F).setAnimations(Animations.SPEAR_THRUST))
+				.newProperty()
 				.addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(10.0F))
 				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD)
+				.addProperty(AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.SWEEPING_EDGE_ENCHANTMENT.create()))
 				.registerPropertiesToAnimation());
 		
-		GIANT_WHIRLWIND = registerSkill(new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "giant_whirlwind")).setConsumption(60.0F).setAnimations(Animations.GIANT_WHIRLWIND))
-				.newPropertyLine()
+		GIANT_WHIRLWIND = registerSkill(new SimpleWeaponInnateSkill(SimpleWeaponInnateSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "giant_whirlwind")).setConsumption(60.0F).setAnimations(Animations.GIANT_WHIRLWIND))
+				.newProperty()
 				.addProperty(AttackPhaseProperty.IMPACT_MODIFIER, ValueModifier.multiplier(1.4F))
+				.addProperty(AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.SWEEPING_EDGE_ENCHANTMENT.create()))
 				.registerPropertiesToAnimation());
 		
-		FATAL_DRAW = registerSkill(new FatalDrawSkill(SpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "fatal_draw")).setConsumption(30.0F))
-				.newPropertyLine()
+		FATAL_DRAW = registerSkill(new FatalDrawSkill(WeaponInnateSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "fatal_draw")).setConsumption(30.0F))
+				.newProperty()
 				.addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(2.0F))
 				.addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(50.0F))
 				.addProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.adder(6))
 				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD)
+				.addProperty(AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.SWEEPING_EDGE_ENCHANTMENT.create()))
 				.registerPropertiesToAnimation());
 		
 		KATANA_PASSIVE = registerSkill(new KatanaPassive(Skill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "katana_passive"))
@@ -190,49 +200,52 @@ public class Skills {
 				.setResource(Resource.COOLDOWN)
 		));
 		
-		LETHAL_SLICING = registerSkill(new LethalSlicingSkill(SpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "lethal_slicing")).setConsumption(35.0F))
-				.newPropertyLine()
+		LETHAL_SLICING = registerSkill(new LethalSlicingSkill(WeaponInnateSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "lethal_slicing")).setConsumption(35.0F))
+				.newProperty()
 				.addProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(2))
 				.addProperty(AttackPhaseProperty.IMPACT_MODIFIER, ValueModifier.setter(0.5F))
 				.addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.setter(1.0F))
 				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.LONG)
 				.addProperty(AttackPhaseProperty.HIT_SOUND, EpicFightSounds.BLUNT_HIT)
 				.addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.HIT_BLUNT)
-				.newPropertyLine()
+				.newProperty()
 				.addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(50.0F))
 				.addProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.adder(2))
 				.addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(1.7F))
 				.addProperty(AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH_SHARP)
+				.addProperty(AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.SWEEPING_EDGE_ENCHANTMENT.create()))
 				.registerPropertiesToAnimation());
 		
-		RELENTLESS_COMBO = registerSkill(new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "relentless_combo")).setConsumption(20.0F).setAnimations(Animations.RELENTLESS_COMBO))
-				.newPropertyLine()
+		RELENTLESS_COMBO = registerSkill(new SimpleWeaponInnateSkill(SimpleWeaponInnateSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "relentless_combo")).setConsumption(20.0F).setAnimations(Animations.RELENTLESS_COMBO))
+				.newProperty()
 				.addProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1))
 				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD)
 				.addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.HIT_BLUNT)
+				.addProperty(AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.SWEEPING_EDGE_ENCHANTMENT.create()))
 				.registerPropertiesToAnimation());
 		
-		LIECHTENAUER = registerSkill(new LiechtenauerSkill(SpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "liechtenauer")).setConsumption(40.0F).setMaxDuration(4).setActivateType(ActivateType.DURATION_INFINITE)));
+		LIECHTENAUER = registerSkill(new LiechtenauerSkill(WeaponInnateSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "liechtenauer")).setConsumption(40.0F).setMaxDuration(4).setActivateType(ActivateType.DURATION_INFINITE)));
 		
-		EVISCERATE = registerSkill(new EviscerateSkill(SpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "eviscerate")).setConsumption(25.0F))
-				.newPropertyLine()
+		EVISCERATE = registerSkill(new EviscerateSkill(WeaponInnateSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "eviscerate")).setConsumption(25.0F))
+				.newProperty()
 				.addProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1))
 				.addProperty(AttackPhaseProperty.IMPACT_MODIFIER, ValueModifier.setter(2.0F))
 				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD)
-				.newPropertyLine()
+				.newProperty()
 				.addProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1))
-				.addProperty(AttackPhaseProperty.EXTRA_DAMAGE, ExtraDamage.get(ExtraDamage.PERCENT_OF_TARGET_LOST_HEALTH, 0.5F))
+				.addProperty(AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.SWEEPING_EDGE_ENCHANTMENT.create(), ExtraDamageInstance.TARGET_LOST_HEALTH.create(0.5F)))
 				.addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(50.0F))
 				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.LONG)
 				.registerPropertiesToAnimation());
 		
-		BLADE_RUSH = registerSkill(new BladeRushSkill(SpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "blade_rush")).setConsumption(25.0F).setMaxDuration(1).setMaxStack(4).setActivateType(ActivateType.TOGGLE))
-				.newPropertyLine()
+		BLADE_RUSH = registerSkill(new BladeRushSkill(WeaponInnateSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "blade_rush")).setConsumption(25.0F).setMaxDuration(1).setMaxStack(4).setActivateType(ActivateType.TOGGLE))
+				.newProperty()
 				.addProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1))
-				.newPropertyLine()
+				.newProperty()
 				.addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(2.5F))
 				.addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(20.0F))
 				.addProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(1))
+				.addProperty(AttackPhaseProperty.EXTRA_DAMAGE, Set.of(ExtraDamageInstance.SWEEPING_EDGE_ENCHANTMENT.create()))
 				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD)
 				.addProperty(AttackPhaseProperty.HIT_SOUND, EpicFightSounds.BLADE_RUSH_FINISHER)
 				.addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.BLADE_RUSH_SKILL)

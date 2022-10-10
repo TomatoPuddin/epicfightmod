@@ -119,7 +119,7 @@ public class CapabilityItem {
 	}
 	
 	@Nullable
-	public Skill getSpecialAttack(PlayerPatch<?> playerpatch) {
+	public Skill getInnateSkill(PlayerPatch<?> playerpatch) {
 		return null;
 	}
 	
@@ -132,24 +132,24 @@ public class CapabilityItem {
 		return this.weaponCategory;
 	}
 	
-	public void changeWeaponSpecialSkill(PlayerPatch<?> playerpatch) {
-		Skill specialSkill = this.getSpecialAttack(playerpatch);
+	public void changeWeaponInnateSkill(PlayerPatch<?> playerpatch) {
+		Skill weaponInnateSkill = this.getInnateSkill(playerpatch);
 		String skillName = "";
 		SPChangeSkill.State state = SPChangeSkill.State.ENABLE;
-		SkillContainer specialSkillContainer = playerpatch.getSkill(SkillCategories.WEAPON_SPECIAL_ATTACK);
+		SkillContainer weaponInnateSkillContainer = playerpatch.getSkill(SkillCategories.WEAPON_INNATE);
 		
-		if (specialSkill != null) {
-			if (specialSkillContainer.getSkill() != specialSkill) {
-				specialSkillContainer.setSkill(specialSkill);
+		if (weaponInnateSkill != null) {
+			if (weaponInnateSkillContainer.getSkill() != weaponInnateSkill) {
+				weaponInnateSkillContainer.setSkill(weaponInnateSkill);
 			}
 			
-			skillName = specialSkill.toString();
+			skillName = weaponInnateSkill.toString();
 		} else {
 			state = SPChangeSkill.State.DISABLE;
 		}
 		
-		specialSkillContainer.setDisabled(specialSkill == null);
-		EpicFightNetworkManager.sendToPlayer(new SPChangeSkill(SkillCategories.WEAPON_SPECIAL_ATTACK.universalOrdinal(), skillName, state), (ServerPlayer)playerpatch.getOriginal());
+		weaponInnateSkillContainer.setDisabled(weaponInnateSkill == null);
+		EpicFightNetworkManager.sendToPlayer(new SPChangeSkill(SkillCategories.WEAPON_INNATE.universalOrdinal(), skillName, state), (ServerPlayer)playerpatch.getOriginal());
 		
 		Skill skill = this.getPassiveSkill();
 		SkillContainer passiveSkillContainer = playerpatch.getSkill(SkillCategories.WEAPON_PASSIVE);

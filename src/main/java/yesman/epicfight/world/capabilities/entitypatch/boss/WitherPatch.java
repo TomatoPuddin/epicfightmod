@@ -54,7 +54,6 @@ import yesman.epicfight.world.entity.DroppedNetherStar;
 import yesman.epicfight.world.entity.WitherGhostClone;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 import yesman.epicfight.world.entity.ai.goal.CombatBehaviorGoal;
-import yesman.epicfight.world.entity.eventlistener.HurtEvent;
 
 public class WitherPatch extends MobPatch<WitherBoss> {
 	private static final EntityDataAccessor<Boolean> DATA_ARMOR_ACTIVED = SynchedEntityData.defineId(WitherBoss.class, EntityDataSerializers.BOOLEAN);
@@ -205,9 +204,12 @@ public class WitherPatch extends MobPatch<WitherBoss> {
 			} else {
 				if (this.original.tickCount % 4 == (this.blockingStartTick - 1) % 4) {
 					if (this.original.position().distanceToSqr(this.blockingEntity.getOriginal().position()) < 9.0D) {
-						EpicFightDamageSource extendedSource = this.getDamageSource(StunType.KNOCKDOWN, Animations.WITHER_CHARGE, InteractionHand.MAIN_HAND);
-						extendedSource.setImpact(4.0F);
-						extendedSource.setInitialPosition(this.lastAttackPosition);
+						EpicFightDamageSource extendedSource = this.getDamageSource(Animations.WITHER_CHARGE, InteractionHand.MAIN_HAND);
+						extendedSource
+							.setStunType(StunType.KNOCKDOWN)
+							.setImpact(4.0F)
+							.setInitialPosition(this.lastAttackPosition);
+						
 						AttackResult attackResult = this.tryHarm(this.blockingEntity.getOriginal(), extendedSource, blockingCount);
 						
 						if (attackResult.resultType == AttackResult.ResultType.SUCCESS) {
@@ -225,9 +227,7 @@ public class WitherPatch extends MobPatch<WitherBoss> {
 	}
 	
 	@Override
-	public void onAttackBlocked(HurtEvent.Pre hurtEvent, LivingEntityPatch<?> opponent) {
-		DamageSource damageSource = hurtEvent.getDamageSource();
-		
+	public void onAttackBlocked(DamageSource damageSource, LivingEntityPatch<?> opponent) {
 		if (damageSource instanceof EpicFightDamageSource) {
 			EpicFightDamageSource extendedDamageSource = ((EpicFightDamageSource)damageSource);
 			

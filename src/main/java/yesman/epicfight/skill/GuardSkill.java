@@ -247,7 +247,7 @@ public class GuardSkill extends Skill {
 		LivingEntityPatch<?> entitypatch = (LivingEntityPatch<?>)directEntity.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null);
 		
 		if (entitypatch != null) {
-			entitypatch.onAttackBlocked(event, playerpatch);
+			entitypatch.onAttackBlocked(event.getDamageSource(), playerpatch);
 		}
 	}
 	

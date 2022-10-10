@@ -24,6 +24,10 @@
 	"debug.armor_model_debugging.on": "Armor model debugging: On",
 	"debug.armor_model_debugging.off": "Armor model debugging: Off",
 	
+	"damage.epicfight.damage" : "%s damage",
+	"damage.epicfight.target_lost_health" : " + %s of the target lost health",
+	"damage.epicfight.sweeping_edge_enchant" : "Affected by sweeping edge enchantment",
+	
 	"effect.epicfight.stun_immunity" : "Stun Immunity",
 	"effect.epicfight.blooming" : "Blooming",
 	
@@ -83,7 +87,7 @@
 	"gui.epicfight.filter_animation.tooltip" : "Turn on/off the animated model in mining mode",
 	"gui.epicfight.health_indicator.tooltip" : "Turn on/off the entity's health indicator",
 	"gui.epicfight.target_indicator.tooltip" : "Turn on/off the target indicator",
-	"gui.epicfight.long_press_counter.tooltip" : "Determines how many ticks it will take to recognize as a long press. Used for special attacks and dodge",
+	"gui.epicfight.long_press_counter.tooltip" : "Determines how many ticks it will take to recognize as a long press. Used for weapon innate and dodge skills",
 	"gui.epicfight.aim_helper.tooltip" : "Draw the aim helper during aiming a bow or crossbow, Incompatible with fabulous graphic setting and some shaders",
 	"gui.epicfight.camera_auto_switch.tooltip" : "Automatically switch to the first/third person when toggle mining/battle mode",
 	"gui.epicfight.auto_preparation.tooltip" : "Automatically switch to the battle mode when the player hit",
@@ -138,9 +142,9 @@
 	
 	"key.epicfight.gui" : "Epic Fight GUI",
 	"key.epicfight.combat" : "Epic Fight Combat",
-	"key.epicfight.show_tooltip" : "Show Special Skill Tooltip",
+	"key.epicfight.show_tooltip" : "Show Weapon Innate Skill Tooltip",
 	"key.epicfight.switch_mode" : "Toggle Battle/Mining Mode",
-	"key.epicfight.weapon_special_skill" : "Weapon Special Skill",
+	"key.epicfight.weapon_innate_skill" : "Weapon Innate Skill",
 	"key.epicfight.skill_gui" : "Open Skill Editor",
 	"key.epicfight.dodge" : "Dodge",
 	
@@ -189,8 +193,5 @@
 	
 	"skill.epicfight.passive.category" : "Passive Skill",
 	"skill.epicfight.dodge.category" : "Dodge Skill",
-	"skill.epicfight.guard.category" : "Guard Skill",
-	
-	"skill.epicfight.damage" : "%s damage",
-	"skill.epicfight.percent_of_target_lost_health" : " + %s of the target lost health"
+	"skill.epicfight.guard.category" : "Guard Skill"
 }

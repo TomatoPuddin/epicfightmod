@@ -17,7 +17,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -56,7 +55,6 @@ import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributeSupplier;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
-import yesman.epicfight.world.entity.eventlistener.HurtEvent;
 
 public abstract class LivingEntityPatch<T extends LivingEntity> extends EntityPatch<T> {
 	public static final EntityDataAccessor<Float> STUN_SHIELD = new EntityDataAccessor<Float> (251, EntityDataSerializers.FLOAT);
@@ -67,8 +65,11 @@ public abstract class LivingEntityPatch<T extends LivingEntity> extends EntityPa
 	protected Animator animator;
 	public LivingMotion currentLivingMotion = LivingMotions.IDLE;
 	public LivingMotion currentCompositeMotion = LivingMotions.IDLE;
+	
 	public List<LivingEntity> currentlyAttackedEntity;
 	protected Vec3 lastAttackPosition;
+	protected EpicFightDamageSource animationDamageSource;
+	private Entity lastTryHurtEntity;
 	private ResultType lastResultType;
 	private float lastDealDamage;
 	
@@ -158,22 +159,12 @@ public abstract class LivingEntityPatch<T extends LivingEntity> extends EntityPa
 		}
 	}
 	
-	public EpicFightDamageSource getDamageSource(StunType stunType, StaticAnimation animation, InteractionHand hand) {
-		return EpicFightDamageSource.causeMobDamage(this.original, stunType, animation);
-	}
-	
-	public float getDamageTo(@Nullable Entity targetEntity, @Nullable EpicFightDamageSource source, InteractionHand hand) {
-		float damage = 0;
+	public EpicFightDamageSource getDamageSource(StaticAnimation animation, InteractionHand hand) {
+		EpicFightDamageSource damagesource = EpicFightDamageSource.commonEntityDamageSource("mob", this.original, animation);
+		damagesource.setImpact(this.getImpact(hand));
+		damagesource.setArmorNegation(this.getArmorNegation(hand));
 		
-		if (hand == InteractionHand.MAIN_HAND) {
-			damage = (float) this.original.getAttributeValue(Attributes.ATTACK_DAMAGE);
-		} else {
-			damage = this.isOffhandItemValid() ? (float) this.original.getAttributeValue(EpicFightAttributes.OFFHAND_ATTACK_DAMAGE.get()) : (float) this.original.getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue();
-		}
-		
-		damage += EnchantmentHelper.getDamageBonus(this.getValidItemInHand(hand), (targetEntity instanceof LivingEntity) ? ((LivingEntity)targetEntity).getMobType() : MobType.UNDEFINED);
-		
-		return damage;
+		return damagesource;
 	}
 	
 	public AttackResult tryHurt(DamageSource damageSource, float amount) {
@@ -190,9 +181,22 @@ public abstract class LivingEntityPatch<T extends LivingEntity> extends EntityPa
 		return result;
 	}
 	
-	public void setLastAttackResult(AttackResult attackResult) {
+	public void setLastAttackResult(Entity tryHurtEntity, AttackResult attackResult) {
+		this.lastTryHurtEntity = tryHurtEntity;
 		this.lastResultType = attackResult.resultType;
 		this.lastDealDamage = attackResult.damage;
+	}
+	
+	@Nullable
+	public EpicFightDamageSource getAnimationDamageSource() {
+		return this.animationDamageSource;
+	}
+	
+	public boolean attackSuccess(Entity target) {
+		boolean success = target.is(this.lastTryHurtEntity);
+		this.lastTryHurtEntity = null;
+		
+		return success;
 	}
 	
 	public AttackResult getLastAttackResult() {
@@ -200,7 +204,7 @@ public abstract class LivingEntityPatch<T extends LivingEntity> extends EntityPa
 	}
 	
 	public AttackResult attack(EpicFightDamageSource damageSource, Entity target) {
-		return (target.is(this.original.getLastHurtMob()) && target.isAlive()) ? this.getLastAttackResult() : AttackResult.failed();
+		return this.attackSuccess(target) ? this.getLastAttackResult() : AttackResult.failed();
 	}
 	
 	/**
@@ -444,7 +448,7 @@ public abstract class LivingEntityPatch<T extends LivingEntity> extends EntityPa
 	public void updateArmor(CapabilityItem fromCap, CapabilityItem toCap, EquipmentSlot slotType) {
 	}
 	
-	public void onAttackBlocked(HurtEvent.Pre hurtEvent, LivingEntityPatch<?> opponent) {
+	public void onAttackBlocked(DamageSource damageSource, LivingEntityPatch<?> opponent) {
 	}
 	
 	public void onMount(boolean isMountOrDismount, Entity ridingEntity) {

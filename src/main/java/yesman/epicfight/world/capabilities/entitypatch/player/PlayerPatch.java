@@ -174,12 +174,12 @@ public abstract class PlayerPatch<T extends Player> extends LivingEntityPatch<T>
 	public CapabilitySkill getSkillCapability() {
 		return this.original.getCapability(EpicFightCapabilities.CAPABILITY_SKILL).orElse(CapabilitySkill.EMPTY);
 	}
-	
+	/**
 	@Override
 	public float getDamageTo(@Nullable Entity targetEntity, @Nullable EpicFightDamageSource source, InteractionHand hand) {
 		return this.getModifiedDamage(targetEntity, source, super.getDamageTo(targetEntity, source, hand));
 	}
-	
+	**/
 	public float getModifiedDamage(@Nullable Entity targetEntity, @Nullable EpicFightDamageSource source, float baseDamage) {
 		DealtDamageEvent<PlayerPatch<?>> event = new DealtDamageEvent<>(this, this.original, source, baseDamage);
 		this.getEventListener().triggerEvents(EventType.DEALT_DAMAGE_EVENT_PRE, event);
@@ -215,10 +215,12 @@ public abstract class PlayerPatch<T extends Player> extends LivingEntityPatch<T>
 		float fallDist = this.original.fallDistance;
 		boolean isOnGround = this.original.onGround;
 		
+		this.animationDamageSource = damageSource;
 		this.original.attackStrengthTicker = Integer.MAX_VALUE;
 		this.original.fallDistance = 0.0F;
 		this.original.onGround = false;
 		this.original.attack(target);
+		this.animationDamageSource = null;
 		this.original.fallDistance = fallDist;
 		this.original.onGround = isOnGround;
 		
@@ -226,8 +228,12 @@ public abstract class PlayerPatch<T extends Player> extends LivingEntityPatch<T>
 	}
 	
 	@Override
-	public EpicFightDamageSource getDamageSource(StunType stunType, StaticAnimation animation, InteractionHand hand) {
-		return EpicFightDamageSource.causePlayerDamage(this.original, stunType, animation, hand);
+	public EpicFightDamageSource getDamageSource(StaticAnimation animation, InteractionHand hand) {
+		EpicFightDamageSource damagesource = EpicFightDamageSource.commonEntityDamageSource("player", this.original, animation);
+		damagesource.setImpact(this.getImpact(hand));
+		damagesource.setArmorNegation(this.getArmorNegation(hand));
+		
+		return damagesource;
 	}
 	
 	public float getMaxStamina() {

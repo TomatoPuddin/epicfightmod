@@ -13,8 +13,8 @@ import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
-public class SimpleSpecialAttackSkill extends SpecialAttackSkill {
-	public static class Builder extends Skill.Builder<SimpleSpecialAttackSkill> {
+public class SimpleWeaponInnateSkill extends WeaponInnateSkill {
+	public static class Builder extends Skill.Builder<SimpleWeaponInnateSkill> {
 		protected StaticAnimation attackAnimation;
 		
 		public Builder(ResourceLocation resourceLocation) {
@@ -63,12 +63,12 @@ public class SimpleSpecialAttackSkill extends SpecialAttackSkill {
 	}
 	
 	public static Builder createBuilder(ResourceLocation resourceLocation) {
-		return (new Builder(resourceLocation)).setCategory(SkillCategories.WEAPON_SPECIAL_ATTACK).setResource(Resource.SPECIAL_GAUAGE);
+		return (new Builder(resourceLocation)).setCategory(SkillCategories.WEAPON_INNATE).setResource(Resource.WEAPON_INNATE_ENERGY);
 	}
 	
 	protected final StaticAnimation attackAnimation;
 	
-	public SimpleSpecialAttackSkill(Builder builder) {
+	public SimpleWeaponInnateSkill(Builder builder) {
 		super(builder);
 		this.attackAnimation = builder.attackAnimation;
 	}
@@ -88,7 +88,7 @@ public class SimpleSpecialAttackSkill extends SpecialAttackSkill {
 	}
 	
 	@Override
-	public SpecialAttackSkill registerPropertiesToAnimation() {
+	public WeaponInnateSkill registerPropertiesToAnimation() {
 		AttackAnimation anim = ((AttackAnimation)this.attackAnimation);
 		for(Phase phase : anim.phases) {
 			phase.addProperties(this.properties.get(0).entrySet());

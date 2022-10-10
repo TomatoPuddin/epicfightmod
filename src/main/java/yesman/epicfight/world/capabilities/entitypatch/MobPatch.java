@@ -161,8 +161,9 @@ public abstract class MobPatch<T extends Mob> extends LivingEntityPatch<T> {
 	
 	@Override
 	public AttackResult attack(EpicFightDamageSource damageSource, Entity target) {
-		this.tryHurt(null, getAttackDirectionPitch());
+		this.animationDamageSource = damageSource;
 		this.original.doHurtTarget(target);
+		this.animationDamageSource = null;
 		
 		return super.attack(damageSource, target);
 	}

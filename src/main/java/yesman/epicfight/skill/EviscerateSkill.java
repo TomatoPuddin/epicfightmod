@@ -15,7 +15,7 @@ import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener.EventType;
 
-public class EviscerateSkill extends SpecialAttackSkill {
+public class EviscerateSkill extends WeaponInnateSkill {
 	private static final UUID EVENT_UUID = UUID.fromString("f082557a-b2f9-11eb-8529-0242ac130003");
 	private StaticAnimation first;
 	private StaticAnimation second;
@@ -63,7 +63,7 @@ public class EviscerateSkill extends SpecialAttackSkill {
 	}
 	
 	@Override
-	public SpecialAttackSkill registerPropertiesToAnimation() {
+	public WeaponInnateSkill registerPropertiesToAnimation() {
 		AttackAnimation _first = ((AttackAnimation)this.first);
 		AttackAnimation _second = ((AttackAnimation)this.second);
 		_first.phases[0].addProperties(this.properties.get(0).entrySet());

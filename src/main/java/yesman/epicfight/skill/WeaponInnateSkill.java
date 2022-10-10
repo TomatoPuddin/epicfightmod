@@ -32,14 +32,14 @@ import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 
-public abstract class SpecialAttackSkill extends Skill {
-	public static Skill.Builder<? extends SpecialAttackSkill> createBuilder(ResourceLocation resourceLocation) {
-		return (new Skill.Builder<SpecialAttackSkill>(resourceLocation)).setCategory(SkillCategories.WEAPON_SPECIAL_ATTACK).setResource(Resource.SPECIAL_GAUAGE);
+public abstract class WeaponInnateSkill extends Skill {
+	public static Skill.Builder<? extends WeaponInnateSkill> createBuilder(ResourceLocation resourceLocation) {
+		return (new Skill.Builder<WeaponInnateSkill>(resourceLocation)).setCategory(SkillCategories.WEAPON_INNATE).setResource(Resource.WEAPON_INNATE_ENERGY);
 	}
 	
 	protected List<Map<AttackPhaseProperty<?>, Object>> properties;
 	
-	public SpecialAttackSkill(Builder<? extends Skill> builder) {
+	public WeaponInnateSkill(Builder<? extends Skill> builder) {
 		super(builder);
 		this.properties = Lists.newArrayList();
 	}
@@ -49,7 +49,7 @@ public abstract class SpecialAttackSkill extends Skill {
 		if (executer.isLogicalClient()) {
 			return executer.getSkill(this.getCategory()).isReady() || executer.getOriginal().isCreative();
 		} else {
-			return executer.getHoldingItemCapability(InteractionHand.MAIN_HAND).getSpecialAttack(executer) == this && executer.getOriginal().getVehicle() == null && (!executer.getSkill(this.category).isActivated() || this.activateType == ActivateType.TOGGLE);
+			return executer.getHoldingItemCapability(InteractionHand.MAIN_HAND).getInnateSkill(executer) == this && executer.getOriginal().getVehicle() == null && (!executer.getSkill(this.category).isActivated() || this.activateType == ActivateType.TOGGLE);
 		}
 	}
 	
@@ -103,14 +103,14 @@ public abstract class SpecialAttackSkill extends Skill {
 		
 		list.add(new TextComponent(title).withStyle(ChatFormatting.UNDERLINE).withStyle(ChatFormatting.GRAY));
 		
-		MutableComponent damageComponent = new TranslatableComponent("skill.epicfight.damage",
+		MutableComponent damageComponent = new TranslatableComponent("damage.epicfight.damage",
 				new TextComponent(ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(damage)).withStyle(ChatFormatting.RED)
 		).withStyle(ChatFormatting.DARK_GRAY);
 		
-		this.getProperty(AttackPhaseProperty.EXTRA_DAMAGE, propertyMap).ifPresent((extraDamage) -> {
-			damageComponent.append(new TranslatableComponent(extraDamage.toString(),
-					new TextComponent(ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(extraDamage.getArgument() * 100F) + "%").withStyle(ChatFormatting.RED)))
-				.withStyle(ChatFormatting.DARK_GRAY);
+		this.getProperty(AttackPhaseProperty.EXTRA_DAMAGE, propertyMap).ifPresent((extraDamageSet) -> {
+			extraDamageSet.forEach((extraDamage) -> {
+				damageComponent.append(new TranslatableComponent(extraDamage.toString(), extraDamage.toTransableComponentParams()).withStyle(ChatFormatting.DARK_GRAY));
+			});
 		});
 		
 		list.add(damageComponent);
@@ -142,19 +142,21 @@ public abstract class SpecialAttackSkill extends Skill {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <V> Optional<V> getProperty(AttackPhaseProperty<V> propertyType, Map<AttackPhaseProperty<?>, Object> map) {
-		return (Optional<V>) Optional.ofNullable(map.get(propertyType));
+	protected <V> Optional<V> getProperty(AttackPhaseProperty<V> propertyKey, Map<AttackPhaseProperty<?>, Object> map) {
+		return (Optional<V>) Optional.ofNullable(map.get(propertyKey));
 	}
 	
-	public SpecialAttackSkill newPropertyLine() {
+	public WeaponInnateSkill newProperty() {
 		this.properties.add(Maps.<AttackPhaseProperty<?>, Object>newHashMap());
+		
 		return this;
 	}
 	
-	public <T> SpecialAttackSkill addProperty(AttackPhaseProperty<T> attribute, T object) {
-		this.properties.get(properties.size()-1).put(attribute, object);
+	public <T> WeaponInnateSkill addProperty(AttackPhaseProperty<T> propertyKey, T object) {
+		this.properties.get(properties.size() - 1).put(propertyKey, object);
+		
 		return this;
 	}
 	
-	public abstract SpecialAttackSkill registerPropertiesToAnimation();
+	public abstract WeaponInnateSkill registerPropertiesToAnimation();
 }

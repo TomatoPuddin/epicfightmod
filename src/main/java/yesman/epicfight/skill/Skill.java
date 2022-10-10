@@ -342,7 +342,7 @@ public abstract class Skill {
 	
 	public static enum Resource {
 		NONE((skill, playerpatch) -> true, (skill, playerpatch) -> {}),
-		SPECIAL_GAUAGE((skill, playerpatch) -> playerpatch.getSkill(skill.category).stack > 0, (skill, playerpatch) -> {
+		WEAPON_INNATE_ENERGY((skill, playerpatch) -> playerpatch.getSkill(skill.category).stack > 0, (skill, playerpatch) -> {
 			skill.setStackSynchronize(playerpatch, playerpatch.getSkill(skill.category).getStack() - 1);
 			skill.setDurationSynchronize(playerpatch, skill.maxDuration);
 		}),

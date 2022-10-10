@@ -6,7 +6,7 @@ public enum SkillCategories implements SkillCategory {
 	DODGE(true, true, true),
 	PASSIVE(true, true, true),
 	WEAPON_PASSIVE(false, false, false),
-	WEAPON_SPECIAL_ATTACK(false, true, false),
+	WEAPON_INNATE(false, true, false),
 	GUARD(true, true, true),
 	KNOCKDOWN_WAKEUP(false, false, false),
 	
