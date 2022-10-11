@@ -37,7 +37,6 @@ public class AnimationPlayer {
 				this.prevElapsedTime = this.play.getTotalTime();
 				this.elapsedTime = this.play.getTotalTime() + this.elapsedTime;
 			} else {
-				System.out.println("?? " + this.getAnimation());
 				this.elapsedTime = 0.0F;
 				this.isEnd = true;
 			}

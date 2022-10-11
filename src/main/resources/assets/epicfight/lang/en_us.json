@@ -1,6 +1,6 @@
 {
 	"attribute.name.epicfight.impact": "%s Impact",
-	"attribute.name.epicfight.armor_negation": "%s%% Armor Negation",
+	"attribute.name.epicfight.armor_negation": "%s Armor Negation",
 	"attribute.name.epicfight.max_strikes": "Hit %s Enemies per Swing",
 	"attribute.name.epicfight.mainhand_only" : "Mainhand Only",
 	"attribute.name.epicfight.twohanded" : "TwoHanded",
@@ -26,7 +26,7 @@
 	
 	"damage.epicfight.damage" : "%s damage",
 	"damage.epicfight.target_lost_health" : " + %s of the target lost health",
-	"damage.epicfight.sweeping_edge_enchant" : "Affected by sweeping edge enchantment",
+	"damage.epicfight.sweeping_edge_enchant" : " + %s (Sweeping Edge %s lv)",
 	
 	"effect.epicfight.stun_immunity" : "Stun Immunity",
 	"effect.epicfight.blooming" : "Blooming",

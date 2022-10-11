@@ -64,10 +64,10 @@ public abstract class WeaponInnateSkill extends Skill {
 		return list;
 	}
 	
-	protected void generateTooltipforPhase(List<Component> list, ItemStack itemStack, CapabilityItem cap, PlayerPatch<?> playerpatch, Map<AttackPhaseProperty<?>, Object> propertyMap, String title) {
-		Multimap<Attribute, AttributeModifier> attributes = itemStack.getAttributeModifiers(EquipmentSlot.MAINHAND);
+	protected void generateTooltipforPhase(List<Component> list, ItemStack itemstack, CapabilityItem cap, PlayerPatch<?> playerpatch, Map<AttackPhaseProperty<?>, Object> propertyMap, String title) {
+		Multimap<Attribute, AttributeModifier> attributes = itemstack.getAttributeModifiers(EquipmentSlot.MAINHAND);
 		Multimap<Attribute, AttributeModifier> capAttributes = cap.getAttributeModifiers(EquipmentSlot.MAINHAND, playerpatch);
-		double damage = playerpatch.getOriginal().getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue() + EnchantmentHelper.getDamageBonus(itemStack, MobType.UNDEFINED);
+		double damage = playerpatch.getOriginal().getAttribute(Attributes.ATTACK_DAMAGE).getBaseValue() + EnchantmentHelper.getDamageBonus(itemstack, MobType.UNDEFINED);
 		double armorNegation = playerpatch.getOriginal().getAttribute(EpicFightAttributes.ARMOR_NEGATION.get()).getBaseValue();
 		double impact = playerpatch.getOriginal().getAttribute(EpicFightAttributes.IMPACT.get()).getBaseValue();
 		double maxStrikes = playerpatch.getOriginal().getAttribute(EpicFightAttributes.MAX_STRIKES.get()).getBaseValue();
@@ -94,7 +94,9 @@ public abstract class WeaponInnateSkill extends Skill {
 		this.getProperty(AttackPhaseProperty.IMPACT_MODIFIER, propertyMap).ifPresent(impactModifier::merge);
 		this.getProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER, propertyMap).ifPresent(maxStrikesModifier::merge);
 		
-		impactModifier.merge(ValueModifier.multiplier(1.0F + EnchantmentHelper.getItemEnchantmentLevel(Enchantments.KNOCKBACK, itemStack) * 0.12F));
+		impactModifier.merge(ValueModifier.multiplier(1.0F + EnchantmentHelper.getItemEnchantmentLevel(Enchantments.KNOCKBACK, itemstack) * 0.12F));
+		
+		Double baseDamage = Double.valueOf(damage);
 		
 		damage = damageModifier.getTotalValue(playerpatch.getModifiedDamage(null, null, (float)damage));
 		armorNegation = armorNegationModifier.getTotalValue((float)armorNegation);
@@ -104,12 +106,12 @@ public abstract class WeaponInnateSkill extends Skill {
 		list.add(new TextComponent(title).withStyle(ChatFormatting.UNDERLINE).withStyle(ChatFormatting.GRAY));
 		
 		MutableComponent damageComponent = new TranslatableComponent("damage.epicfight.damage",
-				new TextComponent(ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(damage)).withStyle(ChatFormatting.RED)
-		).withStyle(ChatFormatting.DARK_GRAY);
+					new TextComponent(ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(damage)).withStyle(ChatFormatting.RED)
+				).withStyle(ChatFormatting.DARK_GRAY);
 		
 		this.getProperty(AttackPhaseProperty.EXTRA_DAMAGE, propertyMap).ifPresent((extraDamageSet) -> {
 			extraDamageSet.forEach((extraDamage) -> {
-				damageComponent.append(new TranslatableComponent(extraDamage.toString(), extraDamage.toTransableComponentParams()).withStyle(ChatFormatting.DARK_GRAY));
+				extraDamage.setTooltips(itemstack, damageComponent, baseDamage);
 			});
 		});
 		
@@ -117,7 +119,7 @@ public abstract class WeaponInnateSkill extends Skill {
 		
 		if (armorNegation != 0.0D) {
 			list.add(new TranslatableComponent(EpicFightAttributes.ARMOR_NEGATION.get().getDescriptionId(),
-					new TextComponent(ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(armorNegation)).withStyle(ChatFormatting.GOLD)
+					new TextComponent(ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(armorNegation) + "%").withStyle(ChatFormatting.GOLD)
 			).withStyle(ChatFormatting.DARK_GRAY));
 		}
 		
@@ -136,6 +138,7 @@ public abstract class WeaponInnateSkill extends Skill {
 		stunOption.ifPresent((stunType) -> {
 			list.add(new TextComponent(ChatFormatting.DARK_GRAY + "Apply " + stunType.toString()));
 		});
+		
 		if (!stunOption.isPresent()) {
 			list.add(new TextComponent(ChatFormatting.DARK_GRAY + "Apply " + StunType.SHORT.toString()));
 		}	

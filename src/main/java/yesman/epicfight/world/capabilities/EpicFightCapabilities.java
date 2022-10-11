@@ -33,7 +33,7 @@ public class EpicFightCapabilities {
 	public static <T extends EntityPatch> T getEntityPatch(Entity entity, Class<T> type) {
 		EntityPatch<?> entitypatch = entity.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null);
 		
-		if (type.isAssignableFrom(entitypatch.getClass())) {
+		if (entitypatch != null && type.isAssignableFrom(entitypatch.getClass())) {
 			return (T)entitypatch;
 		}
 		

@@ -14,7 +14,6 @@ import net.minecraftforge.network.NetworkEvent;
 import yesman.epicfight.api.animation.LivingMotion;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.client.animation.ClientAnimator;
-import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
@@ -104,7 +103,7 @@ public class SPChangeLivingMotion {
 			Entity entity = mc.player.level.getEntity(msg.entityId);
 			
 			if (entity != null) {
-				LivingEntityPatch<?> entitypatch = EpicFightCapabilities.getEntityPatch(entity, LocalPlayerPatch.class);
+				LivingEntityPatch<?> entitypatch = EpicFightCapabilities.getEntityPatch(entity, LivingEntityPatch.class);
 				ClientAnimator animator = entitypatch.getClientAnimator();
 				animator.resetMotions();
 				animator.resetCompositeMotion();

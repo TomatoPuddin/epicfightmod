@@ -119,8 +119,6 @@ public class Skills {
 	public static Skill GROUND_SLAM;
 	
 	public static void registerSkills() {
-		System.out.println("register skill start");
-		
 		BASIC_ATTACK = registerSkill(new BasicAttack(BasicAttack.createBuilder()));
 		AIR_ATTACK = registerSkill(new AirAttack(AirAttack.createBuilder()));
 		ROLL = registerSkill(new DodgeSkill(DodgeSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "roll")).setConsumption(4.0F).setAnimations(Animations.BIPED_ROLL_FORWARD, Animations.BIPED_ROLL_BACKWARD)));
