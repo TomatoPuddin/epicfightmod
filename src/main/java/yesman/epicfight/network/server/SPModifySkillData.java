@@ -42,7 +42,8 @@ public class SPModifySkillData {
 	public static void handle(SPModifySkillData msg, Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 			Minecraft mc = Minecraft.getInstance();
-			LocalPlayerPatch playerpatch = (LocalPlayerPatch) mc.player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
+			LocalPlayerPatch playerpatch = EpicFightCapabilities.getEntityPatch(mc.player, LocalPlayerPatch.class);
+			
 			if (playerpatch != null) {
 				SkillDataManager dataManager = playerpatch.getSkill(msg.slot).getDataManager();
 				dataManager.setDataRawtype(SkillDataKey.findById(msg.id), msg.value);

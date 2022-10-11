@@ -59,9 +59,9 @@ import yesman.epicfight.world.capabilities.item.CapabilityItem.WeaponCategories;
 import yesman.epicfight.world.capabilities.item.Style;
 import yesman.epicfight.world.capabilities.item.WeaponCapabilityPresets;
 import yesman.epicfight.world.capabilities.item.WeaponCategory;
-import yesman.epicfight.world.capabilities.provider.ProviderEntity;
-import yesman.epicfight.world.capabilities.provider.ProviderItem;
-import yesman.epicfight.world.capabilities.provider.ProviderProjectile;
+import yesman.epicfight.world.capabilities.provider.EntityPatchProvider;
+import yesman.epicfight.world.capabilities.provider.ItemCapabilityProvider;
+import yesman.epicfight.world.capabilities.provider.ProjectilePatchProvider;
 import yesman.epicfight.world.effect.EpicFightMobEffects;
 import yesman.epicfight.world.effect.EpicFightPotions;
 import yesman.epicfight.world.entity.EpicFightEntities;
@@ -131,7 +131,7 @@ public class EpicFightMod {
         this.animatorProvider = ClientAnimator::getAnimator;
         this.model = ClientModels.LOGICAL_CLIENT;
     	
-		ProviderEntity.registerEntityPatchesClient();
+		EntityPatchProvider.registerEntityPatchesClient();
 		ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
 		ClientModels.LOGICAL_CLIENT.loadModels(resourceManager);
 		ClientModels.LOGICAL_CLIENT.loadArmatures(resourceManager);
@@ -156,12 +156,13 @@ public class EpicFightMod {
 		event.enqueueWork(SkillArgument::registerArgumentTypes);
 		event.enqueueWork(EpicFightPotions::addRecipes);
 		event.enqueueWork(EpicFightNetworkManager::registerPackets);
-		event.enqueueWork(ProviderItem::registerWeaponTypesByClass);
-		event.enqueueWork(ProviderEntity::registerEntityPatches);
-		event.enqueueWork(ProviderProjectile::registerPatches);
+		event.enqueueWork(ItemCapabilityProvider::registerWeaponTypesByClass);
+		event.enqueueWork(EntityPatchProvider::registerEntityPatches);
+		event.enqueueWork(ProjectilePatchProvider::registerPatches);
 		event.enqueueWork(EpicFightGamerules::registerRules);
 		event.enqueueWork(EpicFightEntities::registerSpawnPlacements);
 		event.enqueueWork(WeaponCapabilityPresets::register);
+		event.enqueueWork(EpicFightMobEffects::addOffhandModifier);
     }
 	
 	private void reloadListnerEvent(final AddReloadListenerEvent event) {

@@ -42,7 +42,7 @@ public class SkillBookScreen extends Screen {
 	
 	@Override
 	protected void init() {
-		LocalPlayerPatch playerpatch = (LocalPlayerPatch) this.opener.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
+		LocalPlayerPatch playerpatch = EpicFightCapabilities.getEntityPatch(this.opener, LocalPlayerPatch.class);
 		boolean isUsing = this.skill.equals(playerpatch.getSkill(this.skill.getCategory()).getSkill());
 		Skill priorSkill = this.skill.getPriorSkill();
 		boolean condition = priorSkill == null ? true : playerpatch.getSkill(priorSkill.getCategory()).getSkill() == priorSkill;

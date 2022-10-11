@@ -70,7 +70,7 @@ public abstract class MixinMouseHandler {
 			this.minecraft.getTutorial().onMouse(d2, d3);
 			
 			if (this.minecraft.player != null) {
-				LocalPlayerPatch playerpatch = (LocalPlayerPatch)this.minecraft.player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null);
+				LocalPlayerPatch playerpatch = EpicFightCapabilities.getEntityPatch(this.minecraft.player, LocalPlayerPatch.class);
 				RenderEngine renderEngine = ClientEngine.instance.renderEngine;
 				
 				if (!playerpatch.getEntityState().turningLocked() || this.minecraft.player.isRidingJumpable()) {

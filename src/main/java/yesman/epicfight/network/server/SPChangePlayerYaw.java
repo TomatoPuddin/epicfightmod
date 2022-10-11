@@ -36,8 +36,10 @@ public class SPChangePlayerYaw {
 		ctx.get().enqueueWork(() -> {
 			Minecraft mc = Minecraft.getInstance();
 			Entity entity = mc.player.level.getEntity(msg.entityId);
+			
 			if (entity != null) {
-				PlayerPatch<?> playerpatch = (PlayerPatch<?>) entity.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
+				PlayerPatch<?> playerpatch = EpicFightCapabilities.getEntityPatch(entity, PlayerPatch.class);
+				
 				if (playerpatch != null) {
 					playerpatch.changeYaw(msg.yaw);
 				}

@@ -45,8 +45,9 @@ public class SPAddSkill {
 	public static void handle(SPAddSkill msg, Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 			Minecraft mc = Minecraft.getInstance();
-			LocalPlayerPatch playerpatch = (LocalPlayerPatch) mc.player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
+			LocalPlayerPatch playerpatch = EpicFightCapabilities.getEntityPatch(mc.player, LocalPlayerPatch.class);
 			CapabilitySkill skillCapability = playerpatch.getSkillCapability();
+			
 			for (String skillName : msg.skillNames) {
 				skillCapability.addLearnedSkill(Skills.getSkill(skillName));
 			}

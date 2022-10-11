@@ -44,7 +44,7 @@ public class PlayerSkillCommand {
 		int i = 0;
 		
 		for (ServerPlayer player : targets) {
-			ServerPlayerPatch playerpatch = (ServerPlayerPatch)player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
+			ServerPlayerPatch playerpatch = EpicFightCapabilities.getEntityPatch(player, ServerPlayerPatch.class);
 			playerpatch.getSkillCapability().clear();
 			EpicFightNetworkManager.sendToPlayer(new SPClearSkills(), player);
 			i++;
@@ -67,7 +67,7 @@ public class PlayerSkillCommand {
 		int i = 0;
 		
 		for (ServerPlayer player : targets) {
-			ServerPlayerPatch playerpatch = (ServerPlayerPatch)player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
+			ServerPlayerPatch playerpatch = EpicFightCapabilities.getEntityPatch(player, ServerPlayerPatch.class);
 			
 			if (playerpatch.getSkillCapability().skillContainers[skill.getCategory().universalOrdinal()].setSkill(skill)) {
 				if (skill.getCategory().learnable()) {
@@ -96,7 +96,7 @@ public class PlayerSkillCommand {
 		int i = 0;
 		
 		for (ServerPlayer player : targets) {
-			ServerPlayerPatch playerpatch = (ServerPlayerPatch)player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
+			ServerPlayerPatch playerpatch = EpicFightCapabilities.getEntityPatch(player, ServerPlayerPatch.class);
 			
 			if (playerpatch != null) {
 				if (playerpatch.getSkillCapability().removeLearnedSkill(skill)) {

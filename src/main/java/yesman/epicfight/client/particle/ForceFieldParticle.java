@@ -37,7 +37,7 @@ public class ForceFieldParticle extends TexturedCustomModelParticle {
 		Entity entity = level.getEntity((int)Double.doubleToLongBits(yd));
 		
 		if (entity != null) {
-			this.caster = (LivingEntityPatch<?>)entity.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null);
+			this.caster = EpicFightCapabilities.getEntityPatch(entity, LivingEntityPatch.class);
 		}
 	}
 	

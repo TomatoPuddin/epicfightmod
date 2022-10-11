@@ -34,7 +34,8 @@ public class CPRotatePlayerYaw {
 			ServerPlayer player = ctx.get().getSender();
 			
 			if (player != null) {
-				PlayerPatch<?> entitypatch = (PlayerPatch<?>) player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
+				PlayerPatch<?> entitypatch = EpicFightCapabilities.getEntityPatch(player, PlayerPatch.class);
+				
 				if (entitypatch != null) {
 					EpicFightNetworkManager.sendToAllPlayerTrackingThisEntity(new SPChangePlayerYaw(player.getId(), msg.yaw), player);
 				}

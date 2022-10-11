@@ -34,7 +34,7 @@ public class CPSetPlayerTarget {
 			ServerPlayer player = ctx.get().getSender();
 			
 			if (player != null) {
-				ServerPlayerPatch entitypatch = (ServerPlayerPatch)player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
+				ServerPlayerPatch entitypatch = EpicFightCapabilities.getEntityPatch(player, ServerPlayerPatch.class);
 				
 				if (entitypatch != null) {
 					Entity entity = entitypatch.getOriginal().level.getEntity(msg.entityId);

@@ -47,7 +47,7 @@ public abstract class MixinWitherBoss extends Monster implements PowerableMob, R
 	
 	@Inject(at = @At(value = "RETURN"), method = "<init>")
 	private void epixfight_witherBossInit(CallbackInfo info) {
-		this.epicfightPatch = (WitherPatch)((WitherBoss)((Object)this)).getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null);
+		this.epicfightPatch = EpicFightCapabilities.getEntityPatch(((WitherBoss)((Object)this)), WitherPatch.class);
 	}
 	
 	@Inject(at = @At(value = "HEAD"), method = "aiStep()V", cancellable = true)

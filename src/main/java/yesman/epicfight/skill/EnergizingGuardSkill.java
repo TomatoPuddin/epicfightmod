@@ -58,7 +58,7 @@ public class EnergizingGuardSkill extends GuardSkill {
 		
 		event.setCanceled(true);
 		Entity directEntity = event.getDamageSource().getDirectEntity();
-		LivingEntityPatch<?> entitypatch = (LivingEntityPatch<?>)directEntity.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null);
+		LivingEntityPatch<?> entitypatch = EpicFightCapabilities.getEntityPatch(directEntity, LivingEntityPatch.class);
 		
 		if (entitypatch != null) {
 			entitypatch.onAttackBlocked(event.getDamageSource(), playerpatch);

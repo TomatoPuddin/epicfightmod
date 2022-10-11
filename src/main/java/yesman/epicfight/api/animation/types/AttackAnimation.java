@@ -202,7 +202,7 @@ public class AttackAnimation extends ActionAnimation {
 							EpicFightDamageSource source = this.getEpicFightDamageSource(entitypatch, e, phase);
 							int prevInvulTime = e.invulnerableTime;
 							e.invulnerableTime = 0;
-							AttackResult attackResult = entitypatch.attack(source, e);
+							AttackResult attackResult = entitypatch.attack(source, e, phase.hand);
 							e.invulnerableTime = prevInvulTime;
 							
 							if (attackResult.resultType.dealtDamage()) {
@@ -257,18 +257,7 @@ public class AttackAnimation extends ActionAnimation {
 	protected int getMaxStrikes(LivingEntityPatch<?> entitypatch, Phase phase) {
 		return phase.getProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER).map((valueCorrector) -> valueCorrector.getTotalValue(entitypatch.getMaxStrikes(phase.hand))).orElse(Float.valueOf(entitypatch.getMaxStrikes(phase.hand))).intValue();
 	}
-	/**
-	protected float getDamageTo(LivingEntityPatch<?> entitypatch, LivingEntity target, Phase phase, EpicFightDamageSource source) {
-		float totalDamage = phase.getProperty(AttackPhaseProperty.DAMAGE_MODIFIER).map((valueCorrector) -> valueCorrector.getTotalValue(entitypatch.getDamageTo(target, source, phase.hand))).orElse(entitypatch.getDamageTo(target, source, phase.hand));
-		ExtraDamage extraCalculator = phase.getProperty(AttackPhaseProperty.EXTRA_DAMAGE).orElse(null);
-		
-		if (extraCalculator != null) {
-			totalDamage += extraCalculator.get(entitypatch.getOriginal(), target);
-		}
-		
-		return totalDamage;
-	}
-	**/
+	
 	protected SoundEvent getSwingSound(LivingEntityPatch<?> entitypatch, Phase phase) {
 		return phase.getProperty(AttackPhaseProperty.SWING_SOUND).orElse(entitypatch.getSwingSound(phase.hand));
 	}

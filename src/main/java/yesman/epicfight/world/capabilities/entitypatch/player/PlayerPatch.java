@@ -174,12 +174,7 @@ public abstract class PlayerPatch<T extends Player> extends LivingEntityPatch<T>
 	public CapabilitySkill getSkillCapability() {
 		return this.original.getCapability(EpicFightCapabilities.CAPABILITY_SKILL).orElse(CapabilitySkill.EMPTY);
 	}
-	/**
-	@Override
-	public float getDamageTo(@Nullable Entity targetEntity, @Nullable EpicFightDamageSource source, InteractionHand hand) {
-		return this.getModifiedDamage(targetEntity, source, super.getDamageTo(targetEntity, source, hand));
-	}
-	**/
+	
 	public float getModifiedDamage(@Nullable Entity targetEntity, @Nullable EpicFightDamageSource source, float baseDamage) {
 		DealtDamageEvent<PlayerPatch<?>> event = new DealtDamageEvent<>(this, this.original, source, baseDamage);
 		this.getEventListener().triggerEvents(EventType.DEALT_DAMAGE_EVENT_PRE, event);
@@ -192,7 +187,8 @@ public abstract class PlayerPatch<T extends Player> extends LivingEntityPatch<T>
 		if (hand == InteractionHand.MAIN_HAND) {
 			baseSpeed = (float)this.original.getAttributeValue(Attributes.ATTACK_SPEED);
 		} else {
-			baseSpeed = (float) (this.isOffhandItemValid() ? this.original.getAttributeValue(Attributes.ATTACK_SPEED) : this.original.getAttributeBaseValue(Attributes.ATTACK_SPEED));
+			baseSpeed = (float)(this.isOffhandItemValid() ? 
+					this.original.getAttributeValue(EpicFightAttributes.OFFHAND_ATTACK_SPEED.get()) : this.original.getAttributeBaseValue(Attributes.ATTACK_SPEED));
 		}
 		
 		return this.getModifiedAttackSpeed(this.getAdvancedHoldingItemCapability(hand), baseSpeed);
@@ -210,21 +206,24 @@ public abstract class PlayerPatch<T extends Player> extends LivingEntityPatch<T>
 	}
 	
 	@Override
-	public AttackResult attack(EpicFightDamageSource damageSource, Entity target) {
-		// Prevents crit and sweeping edge effect
+	public AttackResult attack(EpicFightDamageSource damageSource, Entity target, InteractionHand hand) {
 		float fallDist = this.original.fallDistance;
 		boolean isOnGround = this.original.onGround;
+		boolean shouldSwap = hand == InteractionHand.OFF_HAND;
 		
+		// Prevents crit and sweeping edge effect
 		this.animationDamageSource = damageSource;
 		this.original.attackStrengthTicker = Integer.MAX_VALUE;
 		this.original.fallDistance = 0.0F;
 		this.original.onGround = false;
+		this.swapHandAttackDamage(shouldSwap);
 		this.original.attack(target);
+		this.swapHandAttackDamage(shouldSwap);
 		this.animationDamageSource = null;
 		this.original.fallDistance = fallDist;
 		this.original.onGround = isOnGround;
 		
-		return super.attack(damageSource, target);
+		return super.attack(damageSource, target, hand);
 	}
 	
 	@Override

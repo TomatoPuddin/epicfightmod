@@ -7,6 +7,7 @@ import com.google.common.collect.Sets;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -147,7 +148,7 @@ public abstract class MobPatch<T extends Mob> extends LivingEntityPatch<T> {
 	
 	@Override
 	public boolean isTeammate(Entity entityIn) {
-		EntityPatch<?> cap = entityIn.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null);
+		EntityPatch<?> cap = EpicFightCapabilities.getEntityPatch(entityIn, EntityPatch.class);
 		
 		if (cap != null && cap instanceof MobPatch) {
 			if (((MobPatch<?>) cap).mobFaction.equals(this.mobFaction)) {
@@ -160,12 +161,16 @@ public abstract class MobPatch<T extends Mob> extends LivingEntityPatch<T> {
 	}
 	
 	@Override
-	public AttackResult attack(EpicFightDamageSource damageSource, Entity target) {
+	public AttackResult attack(EpicFightDamageSource damageSource, Entity target, InteractionHand hand) {
+		boolean shouldSwap = hand == InteractionHand.OFF_HAND;
+		
 		this.animationDamageSource = damageSource;
+		this.swapHandAttackDamage(shouldSwap);
 		this.original.doHurtTarget(target);
+		this.swapHandAttackDamage(shouldSwap);
 		this.animationDamageSource = null;
 		
-		return super.attack(damageSource, target);
+		return super.attack(damageSource, target, hand);
 	}
 	
 	@Override

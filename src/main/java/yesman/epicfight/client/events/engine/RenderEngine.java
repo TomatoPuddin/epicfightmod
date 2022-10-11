@@ -418,7 +418,7 @@ public class RenderEngine {
 					return;
 				}
 				
-				LivingEntityPatch<?> entitypatch = (LivingEntityPatch<?>) livingentity.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
+				LivingEntityPatch<?> entitypatch = EpicFightCapabilities.getEntityPatch(livingentity, LivingEntityPatch.class);
 				
 				if (entitypatch != null && !entitypatch.shouldSkipRender()) {
 					event.setCanceled(true);
@@ -439,7 +439,7 @@ public class RenderEngine {
 		public static void itemTooltip(ItemTooltipEvent event) {
 			if (event.getPlayer() != null) {
 				CapabilityItem cap = EpicFightCapabilities.getItemStackCapability(event.getItemStack());
-				LocalPlayerPatch playerpatch = (LocalPlayerPatch) event.getPlayer().getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
+				LocalPlayerPatch playerpatch = EpicFightCapabilities.getEntityPatch(event.getPlayer(), LocalPlayerPatch.class);
 				
 				if (cap != null && playerpatch != null) {
 					if (ClientEngine.instance.controllEngine.isKeyDown(EpicFightKeyMappings.WEAPON_INNATE_SKILL_TOOLTIP)) {
@@ -608,7 +608,7 @@ public class RenderEngine {
 			EnderDragon livingentity = event.getEntity();
 			
 			if (renderEngine.hasRendererFor(livingentity)) {
-				EnderDragonPatch entitypatch = (EnderDragonPatch) livingentity.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
+				EnderDragonPatch entitypatch = EpicFightCapabilities.getEntityPatch(livingentity, EnderDragonPatch.class);
 				
 				if (entitypatch != null) {
 					event.setCanceled(true);

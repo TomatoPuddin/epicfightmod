@@ -28,7 +28,7 @@ import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.capabilities.item.TagBasedSeparativeCapability;
 import yesman.epicfight.world.capabilities.item.WeaponCapabilityPresets;
 
-public class ProviderItem implements ICapabilityProvider, NonNullSupplier<CapabilityItem> {
+public class ItemCapabilityProvider implements ICapabilityProvider, NonNullSupplier<CapabilityItem> {
 	private static final Map<Class<? extends Item>, Function<Item, CapabilityItem.Builder>> CAPABILITY_BY_CLASS = Maps.newHashMap();
 	private static final Map<Item, CapabilityItem> CAPABILITIES = Maps.newHashMap();
 	
@@ -78,7 +78,7 @@ public class ProviderItem implements ICapabilityProvider, NonNullSupplier<Capabi
 	private CapabilityItem capability;
 	private LazyOptional<CapabilityItem> optional = LazyOptional.of(this);
 	
-	public ProviderItem(ItemStack itemstack) {
+	public ItemCapabilityProvider(ItemStack itemstack) {
 		this.capability = CAPABILITIES.get(itemstack.getItem());
 		
 		if (this.capability instanceof TagBasedSeparativeCapability) {

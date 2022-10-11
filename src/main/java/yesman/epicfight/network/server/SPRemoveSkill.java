@@ -34,7 +34,7 @@ public class SPRemoveSkill {
 	public static void handle(SPRemoveSkill msg, Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 			Minecraft mc = Minecraft.getInstance();
-			LocalPlayerPatch playerpatch = (LocalPlayerPatch) mc.player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
+			LocalPlayerPatch playerpatch = EpicFightCapabilities.getEntityPatch(mc.player, LocalPlayerPatch.class);
 			
 			if (playerpatch != null) {
 				Skill skill = Skills.getSkill(msg.skillName);

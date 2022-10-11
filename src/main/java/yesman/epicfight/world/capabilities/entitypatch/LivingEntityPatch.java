@@ -176,7 +176,7 @@ public abstract class LivingEntityPatch<T extends LivingEntity> extends EntityPa
 	}
 	
 	public AttackResult tryHarm(Entity target, EpicFightDamageSource damagesource, float amount) {
-		LivingEntityPatch<?> entitypatch = (LivingEntityPatch<?>)target.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null);
+		LivingEntityPatch<?> entitypatch = EpicFightCapabilities.getEntityPatch(target, LivingEntityPatch.class);
 		AttackResult result = (entitypatch != null) ? entitypatch.tryHurt((DamageSource)damagesource, amount) : new AttackResult(AttackResult.ResultType.SUCCESS, amount);
 		return result;
 	}
@@ -199,26 +199,29 @@ public abstract class LivingEntityPatch<T extends LivingEntity> extends EntityPa
 		return success;
 	}
 	
+	/**
+	 * This method swap the ATTACK_DAMAGE and OFFHAND_ATTACK_DAMAGE in a very unsafe way.
+	 * You must call this method again after finishing the damaging process.
+	 */
+	protected void swapHandAttackDamage(boolean shouldSwap) {
+		if (!shouldSwap) {
+			return;
+		}
+		
+		AttributeInstance mainhandDamage = this.original.getAttribute(Attributes.ATTACK_DAMAGE);
+		AttributeInstance offhandDamage = this.original.getAttribute(EpicFightAttributes.OFFHAND_ATTACK_DAMAGE.get());
+		
+		this.original.getAttributes().attributes.put(Attributes.ATTACK_DAMAGE, offhandDamage);
+		this.original.getAttributes().attributes.put(EpicFightAttributes.OFFHAND_ATTACK_DAMAGE.get(), mainhandDamage);
+	}
+	
 	public AttackResult getLastAttackResult() {
 		return new AttackResult(this.lastResultType, this.lastDealDamage);
 	}
 	
-	public AttackResult attack(EpicFightDamageSource damageSource, Entity target) {
+	public AttackResult attack(EpicFightDamageSource damageSource, Entity target, InteractionHand hand) {
 		return this.attackSuccess(target) ? this.getLastAttackResult() : AttackResult.failed();
 	}
-	
-	/**
-	public void onHurtSomeone(Entity target, InteractionHand handIn, EpicFightDamageSource damagesource, float amount, boolean succeed) {
-		int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_ASPECT, this.getValidItemInHand(handIn));
-		
-		if (target instanceof LivingEntity) {
-			this.getOriginal().doEnchantDamageEffects(this.getOriginal(), target);
-			
-			if (j > 0 && !target.isOnFire()) {
-				target.setSecondsOnFire(j * 4);
-			}
-		}
-	}**/
 	
 	public boolean onDrop(LivingDropsEvent event) {
 		return false;

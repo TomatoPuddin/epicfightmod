@@ -20,7 +20,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import yesman.epicfight.client.renderer.EpicFightRenderTypes;
 import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
-import yesman.epicfight.world.capabilities.entitypatch.EntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.effect.VisibleMobEffect;
 
@@ -97,16 +96,16 @@ public class HealthBarIndicator extends EntityIndicator {
 		this.drawTexturedModalRect2DPlane(mvMatrix, vertexBuilder, healthRatio, -0.05F, 0.5F, 0.05F, textureRatio, 10, 62, 15);
 		float absorption = entityIn.getAbsorptionAmount();
 		
-		if(absorption > 0.0D) {
+		if (absorption > 0.0D) {
 			float absorptionRatio = absorption / entityIn.getMaxHealth();
 			int absTexRatio = (int) (62 * absorptionRatio);
 			this.drawTexturedModalRect2DPlane(mvMatrix, vertexBuilder, -0.5F, -0.05F, absorptionRatio - 0.5F, 0.05F, 1, 20, absTexRatio, 25);
 		}
 		
-		EntityPatch<?> entitypatch = entityIn.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
+		LivingEntityPatch<?> entitypatch = EpicFightCapabilities.getEntityPatch(entityIn, LivingEntityPatch.class);
 		
-		if (entitypatch != null && entitypatch instanceof LivingEntityPatch) {
-			this.renderStunShield((LivingEntityPatch<?>)entitypatch, mvMatrix, vertexBuilder);
+		if (entitypatch != null) {
+			this.renderStunShield(entitypatch, mvMatrix, vertexBuilder);
 		}
 	}
 	

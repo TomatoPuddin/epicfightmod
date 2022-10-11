@@ -64,8 +64,8 @@ public class CPExecuteSkill {
 	public static void handle(CPExecuteSkill msg, Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 			ServerPlayer serverPlayer = ctx.get().getSender();
-			ServerPlayerPatch playerpatch = (ServerPlayerPatch) serverPlayer.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY, null).orElse(null);
-
+			ServerPlayerPatch playerpatch = EpicFightCapabilities.getEntityPatch(serverPlayer, ServerPlayerPatch.class);
+			
 			if (msg.active) {
 				playerpatch.getSkill(msg.skillSlot).requestExecute(playerpatch, msg.getBuffer());
 			} else {

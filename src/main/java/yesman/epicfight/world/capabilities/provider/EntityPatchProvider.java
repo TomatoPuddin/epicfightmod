@@ -56,7 +56,7 @@ import yesman.epicfight.world.capabilities.entitypatch.mob.ZombifiedPiglinPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.entity.EpicFightEntities;
 
-public class ProviderEntity implements ICapabilityProvider, NonNullSupplier<EntityPatch<?>> {
+public class EntityPatchProvider implements ICapabilityProvider, NonNullSupplier<EntityPatch<?>> {
 	private static final Map<EntityType<?>, Function<Entity, Supplier<EntityPatch<?>>>> CAPABILITIES = Maps.newHashMap();
 	private static final Map<EntityType<?>, Function<Entity, Supplier<EntityPatch<?>>>> CUSTOM_CAPABILITIES = Maps.newHashMap();
 	
@@ -133,7 +133,7 @@ public class ProviderEntity implements ICapabilityProvider, NonNullSupplier<Enti
 	private EntityPatch<?> capability;
 	private LazyOptional<EntityPatch<?>> optional = LazyOptional.of(this);
 	
-	public ProviderEntity(Entity entity) {
+	public EntityPatchProvider(Entity entity) {
 		Function<Entity, Supplier<EntityPatch<?>>> provider = CUSTOM_CAPABILITIES.getOrDefault(entity.getType(), CAPABILITIES.get(entity.getType()));
 		
 		if (provider != null) {

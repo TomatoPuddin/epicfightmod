@@ -31,7 +31,7 @@ public class CPChangePlayerMode {
 			ServerPlayer player = ctx.get().getSender();
 			
 			if (player != null) {
-				ServerPlayerPatch playerpatch = (ServerPlayerPatch) player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null);
+				ServerPlayerPatch playerpatch = EpicFightCapabilities.getEntityPatch(player, ServerPlayerPatch.class);
 				
 				if (playerpatch != null) {
 					playerpatch.toMode(msg.mode, false);

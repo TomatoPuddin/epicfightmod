@@ -11,17 +11,18 @@ import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.EntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
-import yesman.epicfight.world.capabilities.provider.ProviderEntity;
-import yesman.epicfight.world.capabilities.provider.ProviderItem;
-import yesman.epicfight.world.capabilities.provider.ProviderProjectile;
-import yesman.epicfight.world.capabilities.provider.ProviderSkill;
+import yesman.epicfight.world.capabilities.projectile.ProjectilePatch;
+import yesman.epicfight.world.capabilities.provider.EntityPatchProvider;
+import yesman.epicfight.world.capabilities.provider.ItemCapabilityProvider;
+import yesman.epicfight.world.capabilities.provider.ProjectilePatchProvider;
+import yesman.epicfight.world.capabilities.provider.SkillCapabilityProvider;
 
 @Mod.EventBusSubscriber(modid=EpicFightMod.MODID)
 public class CapabilityEvent {
 	@SubscribeEvent
 	public static void attachItemCapability(AttachCapabilitiesEvent<ItemStack> event) {
 		if (event.getObject() != null) {
-			ProviderItem prov = new ProviderItem(event.getObject());
+			ItemCapabilityProvider prov = new ItemCapabilityProvider(event.getObject());
 			if (prov.hasCapability()) {
 				event.addCapability(new ResourceLocation(EpicFightMod.MODID, "item_cap"), prov);
 			}
@@ -31,17 +32,22 @@ public class CapabilityEvent {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SubscribeEvent
 	public static void attachEntityCapability(AttachCapabilitiesEvent<Entity> event) {
-		if (event.getObject().getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null) == null) {
-			ProviderEntity prov = new ProviderEntity(event.getObject());
+		EntityPatch entitypatch = EpicFightCapabilities.getEntityPatch(event.getObject(), EntityPatch.class);
+		
+		if (entitypatch == null) {
+			EntityPatchProvider prov = new EntityPatchProvider(event.getObject());
+			
 			if (prov.hasCapability()) {
 				EntityPatch entityCap = prov.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null);
 				entityCap.onConstructed(event.getObject());
 				event.addCapability(new ResourceLocation(EpicFightMod.MODID, "entity_cap"), prov);
+				
 				if (entityCap instanceof PlayerPatch<?>) {
 					if (event.getObject().getCapability(EpicFightCapabilities.CAPABILITY_SKILL).orElse(null) == null) {
 						PlayerPatch<?> playerpatch = (PlayerPatch<?>)entityCap;
+						
 						if (playerpatch != null) {
-							ProviderSkill skillProvider = new ProviderSkill(playerpatch);
+							SkillCapabilityProvider skillProvider = new SkillCapabilityProvider(playerpatch);
 							event.addCapability(new ResourceLocation(EpicFightMod.MODID, "skill_cap"), skillProvider);
 						}
 					}
@@ -50,8 +56,11 @@ public class CapabilityEvent {
 		}
 		
 		if (event.getObject() instanceof Projectile) {
-			if(event.getObject().getCapability(EpicFightCapabilities.CAPABILITY_PROJECTILE).orElse(null) == null) {
-				ProviderProjectile prov = new ProviderProjectile(((Projectile)event.getObject()));
+			ProjectilePatch<?> projectilePatch = EpicFightCapabilities.getProjectilePatch(event.getObject(), ProjectilePatch.class);
+			
+			if(projectilePatch == null) {
+				ProjectilePatchProvider prov = new ProjectilePatchProvider(((Projectile)event.getObject()));
+				
 				if(prov.hasCapability()) {
 					event.addCapability(new ResourceLocation(EpicFightMod.MODID, "projectile_cap"), prov);
 				}

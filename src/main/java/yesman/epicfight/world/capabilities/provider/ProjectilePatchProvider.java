@@ -18,7 +18,7 @@ import yesman.epicfight.world.capabilities.projectile.DragonFireballPatch;
 import yesman.epicfight.world.capabilities.projectile.ProjectilePatch;
 import yesman.epicfight.world.capabilities.projectile.WitherSkullPatch;
 
-public class ProviderProjectile implements ICapabilityProvider, NonNullSupplier<ProjectilePatch<?>> {
+public class ProjectilePatchProvider implements ICapabilityProvider, NonNullSupplier<ProjectilePatch<?>> {
 	private static final Map<EntityType<?>, Supplier<ProjectilePatch<?>>> CAPABILITY_BY_TYPE = new HashMap<EntityType<?>, Supplier<ProjectilePatch<?>>> ();
 	private static final Map<Class<? extends Projectile>, Supplier<ProjectilePatch<?>>> CAPABILITY_BY_CLASS = new HashMap<Class<? extends Projectile>, Supplier<ProjectilePatch<?>>> ();
 	
@@ -33,7 +33,7 @@ public class ProviderProjectile implements ICapabilityProvider, NonNullSupplier<
 	private ProjectilePatch<?> capability;
 	private LazyOptional<ProjectilePatch<?>> optional = LazyOptional.of(this);
 
-	public ProviderProjectile(Projectile projectile) {
+	public ProjectilePatchProvider(Projectile projectile) {
 		if (CAPABILITY_BY_TYPE.containsKey(projectile.getType())) {
 			this.capability = CAPABILITY_BY_TYPE.get(projectile.getType()).get();
 		} else {

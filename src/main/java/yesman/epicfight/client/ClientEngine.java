@@ -36,6 +36,6 @@ public class ClientEngine {
 	
 	@Nullable
 	public LocalPlayerPatch getPlayerPatch() {
-		return (LocalPlayerPatch) this.minecraft.player.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY).orElse(null);
+		return EpicFightCapabilities.getEntityPatch(this.minecraft.player, LocalPlayerPatch.class);
 	}
 }

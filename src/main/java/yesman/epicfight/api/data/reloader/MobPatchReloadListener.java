@@ -46,7 +46,7 @@ import yesman.epicfight.world.capabilities.entitypatch.HumanoidMobPatch;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
 import yesman.epicfight.world.capabilities.item.Style;
 import yesman.epicfight.world.capabilities.item.WeaponCategory;
-import yesman.epicfight.world.capabilities.provider.ProviderEntity;
+import yesman.epicfight.world.capabilities.provider.EntityPatchProvider;
 import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 import yesman.epicfight.world.entity.ai.goal.CombatBehaviors;
@@ -86,7 +86,7 @@ public class MobPatchReloadListener extends SimpleJsonResourceReloadListener {
 			}
 			
 			MOB_PATCH_PROVIDERS.put(entityType, deserialize(tag, false));
-			ProviderEntity.putCustomEntityPatch(entityType, (entity) -> () -> MOB_PATCH_PROVIDERS.get(entity.getType()).get(entity));
+			EntityPatchProvider.putCustomEntityPatch(entityType, (entity) -> () -> MOB_PATCH_PROVIDERS.get(entity.getType()).get(entity));
 			TAGMAP.put(entityType, filterClientData(tag));
 			
 			if (EpicFightMod.isPhysicalClient()) {
@@ -248,7 +248,7 @@ public class MobPatchReloadListener extends SimpleJsonResourceReloadListener {
 			return new NullPatchProvider();
 		} else {
 			if (tag.contains("preset")) {
-				Function<Entity, Supplier<EntityPatch<?>>> preset = ProviderEntity.get(tag.getString("preset"));
+				Function<Entity, Supplier<EntityPatch<?>>> preset = EntityPatchProvider.get(tag.getString("preset"));
 				MobPatchPresetProvider provider = new MobPatchPresetProvider();
 				provider.presetProvider = preset;
 				return provider;
@@ -536,7 +536,7 @@ public class MobPatchReloadListener extends SimpleJsonResourceReloadListener {
 			
 			EntityType<?> entityType = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(tag.getString("id")));
 			MOB_PATCH_PROVIDERS.put(entityType, deserialize(tag, true));
-			ProviderEntity.putCustomEntityPatch(entityType, (entity) -> () -> MOB_PATCH_PROVIDERS.get(entity.getType()).get(entity));
+			EntityPatchProvider.putCustomEntityPatch(entityType, (entity) -> () -> MOB_PATCH_PROVIDERS.get(entity.getType()).get(entity));
 			
 			if (!disabled) {
 				ClientEngine.instance.renderEngine.registerCustomEntityRenderer(entityType, tag.contains("preset") ? tag.getString("preset") : tag.getString("renderer"));
