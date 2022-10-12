@@ -65,12 +65,7 @@ public class ExtraDamageInstance {
 	public void setTooltips(ItemStack itemstack, MutableComponent tooltip, double baseDamage) {
 		this.calculator.tooltip.setTooltip(itemstack, tooltip, baseDamage, this.params);
 	}
-	/**
-	@Override
-	public String toString() {
-		return this.calculator.tooltip;
-	}
-	**/
+	
 	@FunctionalInterface
 	public interface ExtraDamageFunction {
 		float getBonusDamage(LivingEntity attacker, LivingEntity target, float baseDamage, float[] params);

@@ -35,7 +35,6 @@ public class KatanaItem extends WeaponItem {
 		return toRepair.getItem() == Items.IRON_BARS;
 	}
     
-	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		for (Component txtComp : tooltipExpand) {

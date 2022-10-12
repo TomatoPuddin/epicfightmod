@@ -18,8 +18,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import yesman.epicfight.gameasset.Skills;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
@@ -49,8 +47,8 @@ public class SkillBookItem extends Item {
 	}
 	
 	@Override
-	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+		
 		if (stack.getTag() != null && stack.getTag().contains("skill")) {
 			Skill skill = Skills.getSkill(stack.getTag().getString("skill"));
 			
@@ -62,7 +60,7 @@ public class SkillBookItem extends Item {
 	
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
-		if (group == EpicFightItemGroup.ITEMS) {
+		if (group == EpicFightItemGroup.ITEMS || group == CreativeModeTab.TAB_SEARCH) {
 			Skills.getLearnableSkills().forEach((skill) -> {
 				ItemStack stack = new ItemStack(this);
 				setContainingSkill(skill, stack);
@@ -79,6 +77,7 @@ public class SkillBookItem extends Item {
 				((PlayerPatch<?>)capability).openSkillBook(itemstack, hand);
 			}
 		});
+		
 		playerIn.awardStat(Stats.ITEM_USED.get(this));
 		return InteractionResultHolder.pass(itemstack);
 	}
