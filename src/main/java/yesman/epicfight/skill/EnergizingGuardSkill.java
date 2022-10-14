@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -23,8 +22,8 @@ import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.entity.eventlistener.HurtEvent;
 
 public class EnergizingGuardSkill extends GuardSkill {
-	public static GuardSkill.Builder createBuilder(ResourceLocation resourceLocation) {
-		return GuardSkill.createBuilder(resourceLocation)
+	public static GuardSkill.Builder createEnergizingGuardBuilder() {
+		return GuardSkill.createGuardBuilder()
 				.addAdvancedGuardMotion(WeaponCategories.LONGSWORD, (item, player) -> Animations.LONGSWORD_GUARD_HIT)
 				.addAdvancedGuardMotion(WeaponCategories.SPEAR, (item, player) -> item.getStyle(player) == Styles.TWO_HAND ? Animations.SPEAR_GUARD_HIT : null)
 				.addAdvancedGuardMotion(WeaponCategories.TACHI, (item, player) -> Animations.LONGSWORD_GUARD_HIT)

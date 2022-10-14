@@ -13,7 +13,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobType;
@@ -33,8 +32,8 @@ import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 
 public abstract class WeaponInnateSkill extends Skill {
-	public static Skill.Builder<? extends WeaponInnateSkill> createBuilder(ResourceLocation resourceLocation) {
-		return (new Skill.Builder<WeaponInnateSkill>(resourceLocation)).setCategory(SkillCategories.WEAPON_INNATE).setResource(Resource.WEAPON_INNATE_ENERGY);
+	public static Skill.Builder<WeaponInnateSkill> createWeaponInnateBuilder() {
+		return (new Skill.Builder<WeaponInnateSkill>()).setCategory(SkillCategories.WEAPON_INNATE).setResource(Resource.WEAPON_INNATE_ENERGY);
 	}
 	
 	protected List<Map<AttackPhaseProperty<?>, Object>> properties;

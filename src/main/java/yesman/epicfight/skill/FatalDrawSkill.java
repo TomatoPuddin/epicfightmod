@@ -6,7 +6,7 @@ import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
 public class FatalDrawSkill extends SeperativeMotionSkill {
 	public FatalDrawSkill(Builder<? extends Skill> builder) {
-		super(builder, (executer)->executer.getOriginal().isSprinting() ? 1 : 0, Animations.FATAL_DRAW, Animations.FATAL_DRAW_DASH);
+		super(builder, (executer) -> executer.getOriginal().isSprinting() ? 1 : 0, Animations.FATAL_DRAW, Animations.FATAL_DRAW_DASH);
 	}
 	
 	@Override

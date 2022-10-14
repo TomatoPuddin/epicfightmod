@@ -7,19 +7,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import yesman.epicfight.api.animation.types.AttackAnimation;
-import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.animation.types.AttackAnimation.Phase;
+import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
 public class SimpleWeaponInnateSkill extends WeaponInnateSkill {
 	public static class Builder extends Skill.Builder<SimpleWeaponInnateSkill> {
-		protected StaticAnimation attackAnimation;
-		
-		public Builder(ResourceLocation resourceLocation) {
-			super(resourceLocation);
-		}
+		protected ResourceLocation attackAnimation;
 		
 		public Builder setCategory(SkillCategory category) {
 			this.category = category;
@@ -56,21 +53,22 @@ public class SimpleWeaponInnateSkill extends WeaponInnateSkill {
 			return this;
 		}
 		
-		public Builder setAnimations(StaticAnimation attackAnimation) {
+		public Builder setAnimations(ResourceLocation attackAnimation) {
 			this.attackAnimation = attackAnimation;
 			return this;
 		}
 	}
 	
-	public static Builder createBuilder(ResourceLocation resourceLocation) {
-		return (new Builder(resourceLocation)).setCategory(SkillCategories.WEAPON_INNATE).setResource(Resource.WEAPON_INNATE_ENERGY);
+	public static Builder createSimpleWeaponInnateBuilder() {
+		return (new Builder()).setCategory(SkillCategories.WEAPON_INNATE).setResource(Resource.WEAPON_INNATE_ENERGY);
 	}
 	
 	protected final StaticAnimation attackAnimation;
 	
 	public SimpleWeaponInnateSkill(Builder builder) {
 		super(builder);
-		this.attackAnimation = builder.attackAnimation;
+		
+		this.attackAnimation = EpicFightMod.getInstance().animationManager.findAnimationByPath(builder.attackAnimation.toString());
 	}
 	
 	@Override
@@ -90,7 +88,8 @@ public class SimpleWeaponInnateSkill extends WeaponInnateSkill {
 	@Override
 	public WeaponInnateSkill registerPropertiesToAnimation() {
 		AttackAnimation anim = ((AttackAnimation)this.attackAnimation);
-		for(Phase phase : anim.phases) {
+		
+		for (Phase phase : anim.phases) {
 			phase.addProperties(this.properties.get(0).entrySet());
 		}
 		

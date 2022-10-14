@@ -98,6 +98,7 @@ public class EpicFightMod {
     	bus.addListener(EpicFightAttributes::modifyExistingMobs);
     	bus.addListener(EpicFightCapabilities::registerCapabilities);
     	bus.addListener(Animations::registerAnimations);
+    	bus.addListener(Animations::registerAnimations);
     	bus.addGenericListener(DataSerializerEntry.class, EpicFightDataSerializers::register);
     	bus.addGenericListener(GlobalLootModifierSerializer.class, EpicFightLootModifiers::register);
     	
@@ -112,6 +113,7 @@ public class EpicFightMod {
         EpicFightItems.ITEMS.register(bus);
         EpicFightParticles.PARTICLES.register(bus);
         EpicFightEntities.ENTITIES.register(bus);
+        Skills.firstRegisterSkills();
         
         MinecraftForge.EVENT_BUS.addListener(this::reloadListnerEvent);
         MinecraftForge.EVENT_BUS.register(EntityEvents.class);
@@ -152,7 +154,7 @@ public class EpicFightMod {
 	
 	private void doCommonStuff(final FMLCommonSetupEvent event) {
 		event.enqueueWork(this.animationManager::registerAnimations);
-		event.enqueueWork(Skills::registerSkills);
+		event.enqueueWork(Skills::buildSkills);
 		event.enqueueWork(SkillArgument::registerArgumentTypes);
 		event.enqueueWork(EpicFightPotions::addRecipes);
 		event.enqueueWork(EpicFightNetworkManager::registerPackets);

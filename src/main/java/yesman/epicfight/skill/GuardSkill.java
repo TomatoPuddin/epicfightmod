@@ -12,7 +12,6 @@ import com.google.common.collect.Maps;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -53,10 +52,6 @@ public class GuardSkill extends Skill {
 		protected final Map<WeaponCategory, BiFunction<CapabilityItem, PlayerPatch<?>, ?>> guardMotions = Maps.newHashMap();
 		protected final Map<WeaponCategory, BiFunction<CapabilityItem, PlayerPatch<?>, ?>> advancedGuardMotions = Maps.newHashMap();
 		protected final Map<WeaponCategory, BiFunction<CapabilityItem, PlayerPatch<?>, ?>> guardBreakMotions = Maps.newHashMap();
-		
-		public Builder(ResourceLocation resourceLocation) {
-			super(resourceLocation);
-		}
 		
 		public Builder setCategory(SkillCategory category) {
 			this.category = category;
@@ -109,8 +104,8 @@ public class GuardSkill extends Skill {
 		}
 	}
 	
-	public static GuardSkill.Builder createBuilder(ResourceLocation resourceLocation) {
-		return (new GuardSkill.Builder(resourceLocation))
+	public static GuardSkill.Builder createGuardBuilder() {
+		return (new GuardSkill.Builder())
 				.setCategory(SkillCategories.GUARD)
 				.setMaxStack(0)
 				.setActivateType(ActivateType.ONE_SHOT)

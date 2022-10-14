@@ -44,7 +44,7 @@ public class EpicFightCapabilities {
 	public static <T extends ProjectilePatch> T getProjectilePatch(Entity entity, Class<T> type) {
 		ProjectilePatch<?> entitypatch = entity.getCapability(EpicFightCapabilities.CAPABILITY_PROJECTILE).orElse(null);
 		
-		if (type.isAssignableFrom(entitypatch.getClass())) {
+		if (entitypatch != null && type.isAssignableFrom(entitypatch.getClass())) {
 			return (T)entitypatch;
 		}
 		

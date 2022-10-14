@@ -10,17 +10,14 @@ import yesman.epicfight.api.animation.types.EntityState;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.client.events.engine.ControllEngine;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
+import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.network.client.CPExecuteSkill;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
 public class DodgeSkill extends Skill {
 	public static class Builder extends Skill.Builder<DodgeSkill> {
-		protected StaticAnimation[] animations;
-		
-		public Builder(ResourceLocation resourceLocation) {
-			super(resourceLocation);
-		}
+		protected ResourceLocation[] animations;
 		
 		public Builder setCategory(SkillCategory category) {
 			this.category = category;
@@ -57,21 +54,26 @@ public class DodgeSkill extends Skill {
 			return this;
 		}
 		
-		public Builder setAnimations(StaticAnimation... animations) {
+		public Builder setAnimations(ResourceLocation... animations) {
 			this.animations = animations;
 			return this;
 		}
 	}
 	
-	public static Builder createBuilder(ResourceLocation registryName) {
-		return (new Builder(registryName)).setCategory(SkillCategories.DODGE).setActivateType(ActivateType.ONE_SHOT).setResource(Resource.STAMINA).setRequiredXp(5);
+	public static Builder createDodgeBuilder() {
+		return (new Builder()).setCategory(SkillCategories.DODGE).setActivateType(ActivateType.ONE_SHOT).setResource(Resource.STAMINA).setRequiredXp(5);
 	}
 	
 	protected final StaticAnimation[] animations;
 	
 	public DodgeSkill(Builder builder) {
 		super(builder);
-		this.animations = builder.animations;
+		
+		this.animations = new StaticAnimation[builder.animations.length];
+		
+		for (int i = 0; i < builder.animations.length; i++) {
+			this.animations[i] = EpicFightMod.getInstance().animationManager.findAnimationByPath(builder.animations[i].toString());
+		}
 	}
 	
 	@OnlyIn(Dist.CLIENT)

@@ -61,9 +61,9 @@ public class SkillBookItem extends Item {
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
 		if (group == EpicFightItemGroup.ITEMS || group == CreativeModeTab.TAB_SEARCH) {
-			Skills.getLearnableSkills().forEach((skill) -> {
+			Skills.getLearnableSkillNames().forEach((rl) -> {
 				ItemStack stack = new ItemStack(this);
-				setContainingSkill(skill, stack);
+				setContainingSkill(rl.toString(), stack);
 				items.add(stack);
 			});
 		}

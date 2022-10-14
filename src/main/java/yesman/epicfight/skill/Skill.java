@@ -31,7 +31,7 @@ import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
 public abstract class Skill {
 	public static class Builder<T extends Skill> {
-		protected final ResourceLocation registryName;
+		protected ResourceLocation registryName;
 		protected SkillCategory category;
 		protected float consumption;
 		protected int maxDuration;
@@ -40,10 +40,14 @@ public abstract class Skill {
 		protected ActivateType activateType;
 		protected Resource resource;
 		
-		public Builder(ResourceLocation resourceLocation) {
-			this.registryName = resourceLocation;
+		public Builder() {
 			this.maxDuration = 0;
 			this.maxStack = 1;
+		}
+		
+		public Builder<T> setRegistryName(ResourceLocation registryName) {
+			this.registryName = registryName;
+			return this;
 		}
 		
 		public Builder<T> setCategory(SkillCategory category) {
@@ -80,10 +84,18 @@ public abstract class Skill {
 			this.resource = resource;
 			return this;
 		}
+		
+		public ResourceLocation getRegistryName() {
+			return this.registryName;
+		}
+		
+		public boolean isLearnable() {
+			return this.category.learnable();
+		}
 	}
 	
-	public static Builder<? extends Skill> createBuilder(ResourceLocation registryName) {
-		return new Builder<Skill>(registryName);
+	public static Builder<Skill> createBuilder() {
+		return new Builder<Skill>();
 	}
 	
 	protected final ResourceLocation registryName;
@@ -96,6 +108,11 @@ public abstract class Skill {
 	protected final Resource resource;
 	
 	public Skill(Builder<? extends Skill> builder) {
+		if (builder.registryName == null) {
+			Exception e = new IllegalArgumentException("No registry name is given for " + this.getClass().getCanonicalName());
+			e.printStackTrace();
+		}
+		
 		this.registryName = builder.registryName;
 		this.category = builder.category;
 		this.consumption = builder.consumption;
