@@ -33,7 +33,12 @@ public class SkillBookItem extends Item {
 	}
 	
 	public static Skill getContainSkill(ItemStack stack) {
+		if (stack.getTag() == null) {
+			return null;
+		}
+		
 		String skillName = stack.getTag().getString("skill");
+		
 		return Skills.getSkill(skillName);
 	}
 	

@@ -197,7 +197,7 @@ public class Skills {
 					.registerPropertiesToAnimation();
 		GUILLOTINE_AXE = guillotineAxe;
 		
-		WeaponInnateSkill slaughterStance = onBuild.build(EpicFightMod.MODID, "slaughterStance");
+		WeaponInnateSkill slaughterStance = onBuild.build(EpicFightMod.MODID, "slaughter_stance");
 		slaughterStance.newProperty()
 					.addProperty(AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.adder(4))
 					.addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(1.25F))

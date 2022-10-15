@@ -36,6 +36,7 @@ import yesman.epicfight.api.data.reloader.MobPatchReloadListener;
 import yesman.epicfight.client.ClientEngine;
 import yesman.epicfight.client.gui.screen.IngameConfigurationScreen;
 import yesman.epicfight.client.input.EpicFightKeyMappings;
+import yesman.epicfight.client.renderer.patched.item.EpicFightItemProperties;
 import yesman.epicfight.config.ConfigManager;
 import yesman.epicfight.config.ConfigurationIngame;
 import yesman.epicfight.data.loot.EpicFightLootModifiers;
@@ -139,8 +140,11 @@ public class EpicFightMod {
 		ClientModels.LOGICAL_CLIENT.loadArmatures(resourceManager);
 		Models.LOGICAL_SERVER.loadArmatures(resourceManager);
 		this.animationManager.loadAnimationsInit(resourceManager);
+		
 		Animations.buildClient();
 		EpicFightKeyMappings.registerKeys();
+		EpicFightItemProperties.registerItemProperties();
+		
         ((ReloadableResourceManager)resourceManager).registerReloadListener(ClientModels.LOGICAL_CLIENT);
         ((ReloadableResourceManager)resourceManager).registerReloadListener(this.animationManager);
     }
