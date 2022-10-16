@@ -196,7 +196,7 @@ public class AttackAnimation extends ActionAnimation {
 				Entity e = hitEntities.getEntity();
 				LivingEntity trueEntity = this.getTrueEntity(e);
 				
-				if (trueEntity.isAlive() && !entitypatch.currentlyAttackedEntity.contains(trueEntity) && !entitypatch.isTeammate(e)) {
+				if (trueEntity != null && trueEntity.isAlive() && !entitypatch.currentlyAttackedEntity.contains(trueEntity) && !entitypatch.isTeammate(e)) {
 					if (e instanceof LivingEntity || e instanceof PartEntity) {
 						if (entity.hasLineOfSight(e)) {
 							EpicFightDamageSource source = this.getEpicFightDamageSource(entitypatch, e, phase);
