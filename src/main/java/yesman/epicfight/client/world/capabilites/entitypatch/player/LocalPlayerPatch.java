@@ -26,9 +26,9 @@ import yesman.epicfight.client.ClientEngine;
 import yesman.epicfight.client.gui.screen.SkillBookScreen;
 import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.network.EpicFightNetworkManager;
+import yesman.epicfight.network.client.CPChangePlayerMode;
 import yesman.epicfight.network.client.CPPlayAnimation;
 import yesman.epicfight.network.client.CPSetPlayerTarget;
-import yesman.epicfight.network.client.CPChangePlayerMode;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener.EventType;
 
@@ -106,6 +106,11 @@ public class LocalPlayerPatch extends AbstractClientPlayerPatch<LocalPlayer> {
 				EpicFightNetworkManager.sendToServer(new CPSetPlayerTarget(-1));
 			}
 		}
+	}
+	
+	@Override
+	protected boolean isMoving() {
+		return Math.abs(this.original.xxa) > 0.0004F || Math.abs(this.original.zza) > 0.0004F;
 	}
 	
 	@Override

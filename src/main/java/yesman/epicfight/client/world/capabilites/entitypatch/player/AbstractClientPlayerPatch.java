@@ -93,7 +93,7 @@ public class AbstractClientPlayerPatch<T extends AbstractClientPlayer> extends P
 					currentLivingMotion = LivingMotions.FLOAT;
 				else if (original.yCloak - original.yCloakO < -0.25F)
 					currentLivingMotion = LivingMotions.FALL;
-				else if (original.animationSpeed > 0.01F) {
+				else if (this.isMoving()) {
 					if (original.isShiftKeyDown())
 						currentLivingMotion = LivingMotions.SNEAK;
 					else if (original.isSprinting())
@@ -184,6 +184,10 @@ public class AbstractClientPlayerPatch<T extends AbstractClientPlayer> extends P
 		if (this.original.deathTime == 1) {
 			this.getClientAnimator().playDeathAnimation();
 		}
+	}
+	
+	protected boolean isMoving() {
+		return this.original.animationSpeed > 0.01F;
 	}
 	
 	public void updateHeldItem(CapabilityItem mainHandCap, CapabilityItem offHandCap) {
