@@ -113,10 +113,16 @@ public class BladeRushSkill extends SpecialAttackSkill {
 	
 	@Override
 	public SpecialAttackSkill registerPropertiesToAnimation() {
+		/*
 		((AttackAnimation)Animations.BLADE_RUSH_FIRST).phases[0].addProperties(this.properties.get(0).entrySet());
 		((AttackAnimation)Animations.BLADE_RUSH_SECOND).phases[0].addProperties(this.properties.get(0).entrySet());
 		((AttackAnimation)Animations.BLADE_RUSH_THIRD).phases[0].addProperties(this.properties.get(0).entrySet());
 		((AttackAnimation)Animations.BLADE_RUSH_FINISHER).phases[0].addProperties(this.properties.get(1).entrySet());
+		 */
+		((AttackAnimation)Animations.BLADE_RUSH_FIRST).phases[0].setSkillPropertyGroupIndex(0).setWeaponCategory(CapabilityItem.WeaponCategories.DAGGER);
+		((AttackAnimation)Animations.BLADE_RUSH_SECOND).phases[0].setSkillPropertyGroupIndex(0).setWeaponCategory(CapabilityItem.WeaponCategories.DAGGER);
+		((AttackAnimation)Animations.BLADE_RUSH_THIRD).phases[0].setSkillPropertyGroupIndex(0).setWeaponCategory(CapabilityItem.WeaponCategories.DAGGER);
+		((AttackAnimation)Animations.BLADE_RUSH_FINISHER).phases[0].setSkillPropertyGroupIndex(1).setWeaponCategory(CapabilityItem.WeaponCategories.DAGGER);
 		return this;
 	}
 	

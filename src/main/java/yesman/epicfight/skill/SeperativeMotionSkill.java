@@ -41,7 +41,8 @@ public class SeperativeMotionSkill extends SpecialAttackSkill {
 		for (StaticAnimation animation : this.attackAnimations) {
 			AttackAnimation anim = ((AttackAnimation)animation);
 			for (Phase phase : anim.phases) {
-				phase.addProperties(this.properties.get(0).entrySet());
+				phase.setSkillPropertyGroupIndex(0);
+				// phase.addProperties(this.properties.get(0).entrySet());
 			}
 		}
 		

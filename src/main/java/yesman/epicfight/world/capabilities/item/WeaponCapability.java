@@ -22,6 +22,7 @@ import yesman.epicfight.gameasset.EpicFightSounds;
 import yesman.epicfight.particle.EpicFightParticles;
 import yesman.epicfight.particle.HitParticleType;
 import yesman.epicfight.skill.Skill;
+import yesman.epicfight.skill.SpecialAttackSkill;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
@@ -56,13 +57,15 @@ public class WeaponCapability extends CapabilityItem {
 	}
 	
 	@Override
-	public final List<StaticAnimation> getAutoAttckMotion(PlayerPatch<?> playerpatch) {
+	public final List<StaticAnimation> getAutoAttckMotion(LivingEntityPatch<?> playerpatch) {
 		return this.autoAttackMotions.get(this.getStyle(playerpatch));
 	}
 	
 	@Override
-	public final Skill getSpecialAttack(PlayerPatch<?> playerpatch) {
-		return this.specialAttacks.get(this.getStyle(playerpatch));
+	public final Skill getSpecialAttack(LivingEntityPatch<?> playerpatch) {
+		Style s = this.getStyle(playerpatch);
+		if(s == null) return null;
+		return this.specialAttacks.get(s);
 	}
 	
 	@Override
@@ -163,6 +166,10 @@ public class WeaponCapability extends CapabilityItem {
 			this.specialAttackMap = Maps.newHashMap();
 			this.livingMotionModifiers = null;
 			this.canBePlacedOffhand = true;
+		}
+
+		public SpecialAttackSkill getSpecialAttackSkill(Style style) {
+			return (SpecialAttackSkill) this.specialAttackMap.get(style);
 		}
 		
 		@Override

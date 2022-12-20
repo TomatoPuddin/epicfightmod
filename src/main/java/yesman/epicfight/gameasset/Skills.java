@@ -1,47 +1,18 @@
 package yesman.epicfight.gameasset;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 import com.google.common.collect.Maps;
-
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.fml.ModLoader;
-import yesman.epicfight.api.animation.property.AnimationProperty.AttackPhaseProperty;
 import yesman.epicfight.api.forgeevent.SkillRegistryEvent;
-import yesman.epicfight.api.utils.ExtendedDamageSource.StunType;
-import yesman.epicfight.api.utils.math.ExtraDamageType;
-import yesman.epicfight.api.utils.math.ValueCorrector;
 import yesman.epicfight.main.EpicFightMod;
-import yesman.epicfight.particle.EpicFightParticles;
-import yesman.epicfight.skill.ActiveGuardSkill;
-import yesman.epicfight.skill.AirAttack;
-import yesman.epicfight.skill.BasicAttack;
-import yesman.epicfight.skill.BerserkerSkill;
-import yesman.epicfight.skill.BladeRushSkill;
-import yesman.epicfight.skill.DodgeSkill;
-import yesman.epicfight.skill.EnergizingGuardSkill;
-import yesman.epicfight.skill.EviscerateSkill;
-import yesman.epicfight.skill.FatalDrawSkill;
-import yesman.epicfight.skill.GuardSkill;
-import yesman.epicfight.skill.KatanaPassive;
-import yesman.epicfight.skill.KnockdownWakeupSkill;
-import yesman.epicfight.skill.LethalSlicingSkill;
-import yesman.epicfight.skill.LiechtenauerSkill;
-import yesman.epicfight.skill.PassiveSkill;
-import yesman.epicfight.skill.SimpleSpecialAttackSkill;
-import yesman.epicfight.skill.Skill;
+import yesman.epicfight.skill.*;
 import yesman.epicfight.skill.Skill.ActivateType;
 import yesman.epicfight.skill.Skill.Resource;
-import yesman.epicfight.skill.SkillCategories;
-import yesman.epicfight.skill.SpecialAttackSkill;
-import yesman.epicfight.skill.StaminaPillagerSkill;
-import yesman.epicfight.skill.StepSkill;
-import yesman.epicfight.skill.SwordmasterSkill;
-import yesman.epicfight.skill.TechnicianSkill;
+import yesman.epicfight.world.capabilities.item.CapabilityItem;
+
+import java.util.*;
+import java.util.function.Function;
 
 public class Skills {
 	private static final Map<ResourceLocation, Skill> SKILLS = Maps.newHashMap();
@@ -100,19 +71,22 @@ public class Skills {
 	public static Skill SWORD_MASTER;
 	public static Skill TECHNICIAN;
 	/** Special attack skills**/
-	public static Skill GUILLOTINE_AXE;
-	public static Skill SWEEPING_EDGE;
-	public static Skill DANCING_EDGE;
-	public static Skill SLAUGHTER_STANCE;
-	public static Skill HEARTPIERCER;
-	public static Skill GIANT_WHIRLWIND;
-	public static Skill FATAL_DRAW;
+	public static Function<Item, Skill> GUILLOTINE_AXE;
+	public static Function<Item, Skill> SWEEPING_EDGE;
+	public static Function<Item, Skill> DANCING_EDGE;
+	public static Function<Item, Skill> SLAUGHTER_STANCE;
+	public static Function<Item, Skill> HEARTPIERCER;
+	public static Function<Item, Skill> GIANT_WHIRLWIND;
+	public static Function<Item, Skill> FATAL_DRAW1;
+	public static Function<Item, Skill> FATAL_DRAW2;
+	public static Function<Item, Skill> LETHAL_SLICING;
+	public static Function<Item, Skill> RELENTLESS_COMBO;
+	public static Function<Item, Skill> LIECHTENAUER1;
+	public static Function<Item, Skill> LIECHTENAUER2;
+	public static Function<Item, Skill> EVISCERATE;
+	public static Function<Item, Skill> BLADE_RUSH;
+	/** passive skills **/
 	public static Skill KATANA_PASSIVE;
-	public static Skill LETHAL_SLICING;
-	public static Skill RELENTLESS_COMBO;
-	public static Skill LIECHTENAUER;
-	public static Skill EVISCERATE;
-	public static Skill BLADE_RUSH;
 	/** etc skills **/
 	public static Skill CHARGING_JUMP;
 	public static Skill GROUND_SLAM;
@@ -133,132 +107,140 @@ public class Skills {
 		SWORD_MASTER = registerSkill(new SwordmasterSkill(PassiveSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "swordmaster"))));
 		TECHNICIAN = registerSkill(new TechnicianSkill(PassiveSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "technician"))));
 		
-		SWEEPING_EDGE = registerSkill(new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "sweeping_edge")).setConsumption(30.0F).setAnimations(Animations.SWEEPING_EDGE))
+		SWEEPING_EDGE =(item) -> registerSpecialSkill(getSkillRegName(item, "sweeping_edge"), key -> new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(key).setConsumption(30.0F).setAnimations(Animations.SWEEPING_EDGE))
+				.setWeaponCategory(CapabilityItem.WeaponCategories.SWORD)
 				.newPropertyLine()
-				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.adder(1))
-				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.multiplier(2.0F))
-				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(20.0F))
-				.addProperty(AttackPhaseProperty.IMPACT, ValueCorrector.multiplier(1.6F))
-				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.LONG)
-				.registerPropertiesToAnimation());
+				.registerPropertiesToAnimation()
+				.setName("sweeping_edge"));
 		
-		DANCING_EDGE = registerSkill(new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "dancing_edge")).setConsumption(30.0F).setAnimations(Animations.DANCING_EDGE))
+		DANCING_EDGE =(item) ->  registerSpecialSkill(getSkillRegName(item, "dancing_edge"), key -> new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(key).setConsumption(30.0F).setAnimations(Animations.DANCING_EDGE))
+				.setWeaponCategory(CapabilityItem.WeaponCategories.SWORD)
 				.newPropertyLine()
-				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.adder(1))
-				.addProperty(AttackPhaseProperty.IMPACT, ValueCorrector.multiplier(1.2F))
-				.registerPropertiesToAnimation());
+				.registerPropertiesToAnimation()
+				.setName("dancing_edge"));
 		
-		GUILLOTINE_AXE = registerSkill(new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "guillotine_axe")).setConsumption(20.0F).setAnimations(Animations.GUILLOTINE_AXE))
+		GUILLOTINE_AXE =(item) ->  registerSpecialSkill(getSkillRegName(item, "guillotine_axe"), key -> new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(key).setConsumption(20.0F).setAnimations(Animations.GUILLOTINE_AXE))
+				.setWeaponCategory(CapabilityItem.WeaponCategories.AXE)
 				.newPropertyLine()
-				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(1))
-				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.multiplier(2.5F))
-				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(20.0F))
-				.addProperty(AttackPhaseProperty.IMPACT, ValueCorrector.multiplier(2.0F))
-				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.LONG)
-				.registerPropertiesToAnimation());
+				.registerPropertiesToAnimation()
+				.setName("guillotine_axe"));
 		
-		SLAUGHTER_STANCE = registerSkill(new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "slaughter_stance")).setConsumption(40.0F).setAnimations(Animations.SPEAR_SLASH))
+		SLAUGHTER_STANCE =(item) ->  registerSpecialSkill(getSkillRegName(item, "slaughter_stance"), key -> new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(key).setConsumption(40.0F).setAnimations(Animations.SPEAR_SLASH))
+				.setWeaponCategory(CapabilityItem.WeaponCategories.SPEAR)
 				.newPropertyLine()
-				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.adder(4))
-				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.multiplier(1.25F))
-				.addProperty(AttackPhaseProperty.IMPACT, ValueCorrector.multiplier(1.2F))
-				.registerPropertiesToAnimation());
+				.registerPropertiesToAnimation()
+				.setName("slaughter_stance"));
 		
-		HEARTPIERCER = registerSkill(new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "heartpiercer")).setConsumption(40.0F).setAnimations(Animations.SPEAR_THRUST))
+		HEARTPIERCER =(item) ->  registerSpecialSkill(getSkillRegName(item, "heartpiercer"), key -> new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(key).setConsumption(40.0F).setAnimations(Animations.SPEAR_THRUST))
+				.setWeaponCategory(CapabilityItem.WeaponCategories.SPEAR)
 				.newPropertyLine()
-				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(10.0F))
-				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD)
-				.registerPropertiesToAnimation());
+				.registerPropertiesToAnimation()
+				.setName("heartpiercer"));
 		
-		GIANT_WHIRLWIND = registerSkill(new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "giant_whirlwind")).setConsumption(60.0F).setAnimations(Animations.GIANT_WHIRLWIND))
+		GIANT_WHIRLWIND =(item) ->  registerSpecialSkill(getSkillRegName(item, "giant_whirlwind"), key -> new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(key).setConsumption(60.0F).setAnimations(Animations.GIANT_WHIRLWIND))
+				.setWeaponCategory(CapabilityItem.WeaponCategories.GREATSWORD)
 				.newPropertyLine()
-				.addProperty(AttackPhaseProperty.IMPACT, ValueCorrector.multiplier(1.4F))
-				.registerPropertiesToAnimation());
+				.registerPropertiesToAnimation()
+				.setName("giant_whirlwind"));
 		
-		FATAL_DRAW = registerSkill(new FatalDrawSkill(SpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "fatal_draw")).setConsumption(30.0F))
+		FATAL_DRAW1 =(item) ->  registerSpecialSkill(getSkillRegName(item, "fatal_draw1"), key -> new FatalDrawSkill(SpecialAttackSkill.createBuilder(key).setConsumption(30.0F))
 				.newPropertyLine()
-				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.multiplier(2.0F))
-				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(50.0F))
-				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.adder(6))
-				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD)
-				.registerPropertiesToAnimation());
+				.registerPropertiesToAnimation()
+				.setName("fatal_draw"));
+
+		FATAL_DRAW2 =(item) ->  registerSpecialSkill(getSkillRegName(item, "fatal_draw2"), key -> new FatalDrawSkill(SpecialAttackSkill.createBuilder(key).setConsumption(30.0F))
+				.newPropertyLine()
+				.registerPropertiesToAnimation()
+				.setName("fatal_draw"));
 		
+		LETHAL_SLICING =(item) ->  registerSpecialSkill(getSkillRegName(item, "lethal_slicing"), key -> new LethalSlicingSkill(SpecialAttackSkill.createBuilder(key).setConsumption(35.0F))
+				.newPropertyLine()
+				.newPropertyLine()
+				.registerPropertiesToAnimation()
+				.setName("lethal_slicing"));
+		
+		RELENTLESS_COMBO =(item) ->  registerSpecialSkill(getSkillRegName(item, "relentless_combo"), key -> new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(key).setConsumption(20.0F).setAnimations(Animations.RELENTLESS_COMBO))
+				.setWeaponCategory(CapabilityItem.WeaponCategories.FIST)
+				.newPropertyLine()
+				.registerPropertiesToAnimation()
+				.setName("relentless_combo"));
+
+		LIECHTENAUER1 =(item) ->  registerSpecialSkill(getSkillRegName(item, "liechtenauer1"), key -> new LiechtenauerSkill(SpecialAttackSkill.createBuilder(key).setConsumption(40.0F).setMaxDuration(4).setActivateType(ActivateType.DURATION_INFINITE))
+				.setName("liechtenauer"));
+		LIECHTENAUER2 =(item) ->  registerSpecialSkill(getSkillRegName(item, "liechtenauer2"), key -> new LiechtenauerSkill(SpecialAttackSkill.createBuilder(key).setConsumption(40.0F).setMaxDuration(4).setActivateType(ActivateType.DURATION_INFINITE))
+				.setName("liechtenauer"));
+
+		EVISCERATE =(item) -> registerSpecialSkill(getSkillRegName(item, "eviscerate"), key -> {
+			try {
+				return new EviscerateSkill(SpecialAttackSkill.createBuilder(key).setConsumption(25.0F))
+						.newPropertyLine()
+						.newPropertyLine()
+						.registerPropertiesToAnimation()
+						.setName("eviscerate");
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		});
+		
+		BLADE_RUSH =(item) ->  registerSpecialSkill(getSkillRegName(item, "blade_rush"), key -> new BladeRushSkill(SpecialAttackSkill.createBuilder(key).setConsumption(25.0F).setMaxDuration(1).setMaxStack(4).setActivateType(ActivateType.TOGGLE))
+				.newPropertyLine()
+				.newPropertyLine()
+				.registerPropertiesToAnimation()
+				.setName("blade_rush"));
+
+
+
 		KATANA_PASSIVE = registerSkill(new KatanaPassive(Skill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "katana_passive"))
 				.setCategory(SkillCategories.WEAPON_PASSIVE)
 				.setConsumption(5.0F)
 				.setActivateType(ActivateType.ONE_SHOT)
 				.setResource(Resource.COOLDOWN)
 		));
-		
-		LETHAL_SLICING = registerSkill(new LethalSlicingSkill(SpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "lethal_slicing")).setConsumption(35.0F))
-				.newPropertyLine()
-				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(2))
-				.addProperty(AttackPhaseProperty.IMPACT, ValueCorrector.setter(0.5F))
-				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.setter(1.0F))
-				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.LONG)
-				.addProperty(AttackPhaseProperty.HIT_SOUND, EpicFightSounds.BLUNT_HIT)
-				.addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.HIT_BLUNT)
-				.newPropertyLine()
-				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(50.0F))
-				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.adder(2))
-				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.multiplier(1.7F))
-				.addProperty(AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH_SHARP)
-				.registerPropertiesToAnimation());
-		
-		RELENTLESS_COMBO = registerSkill(new SimpleSpecialAttackSkill(SimpleSpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "relentless_combo")).setConsumption(20.0F).setAnimations(Animations.RELENTLESS_COMBO))
-				.newPropertyLine()
-				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(1))
-				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD)
-				.addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.HIT_BLUNT)
-				.registerPropertiesToAnimation());
-		
-		LIECHTENAUER = registerSkill(new LiechtenauerSkill(SpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "liechtenauer")).setConsumption(40.0F).setMaxDuration(4).setActivateType(ActivateType.DURATION_INFINITE)));
-		
-		EVISCERATE = registerSkill(new EviscerateSkill(SpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "eviscerate")).setConsumption(25.0F))
-				.newPropertyLine()
-				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(1))
-				.addProperty(AttackPhaseProperty.IMPACT, ValueCorrector.setter(2.0F))
-				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD)
-				.newPropertyLine()
-				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(1))
-				.addProperty(AttackPhaseProperty.EXTRA_DAMAGE, ExtraDamageType.get(ExtraDamageType.PERCENT_OF_TARGET_LOST_HEALTH, 0.5F))
-				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(50.0F))
-				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.LONG)
-				.registerPropertiesToAnimation());
-		
-		BLADE_RUSH = registerSkill(new BladeRushSkill(SpecialAttackSkill.createBuilder(new ResourceLocation(EpicFightMod.MODID, "blade_rush")).setConsumption(25.0F).setMaxDuration(1).setMaxStack(4).setActivateType(ActivateType.TOGGLE))
-				.newPropertyLine()
-				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(1))
-				.newPropertyLine()
-				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.multiplier(2.5F))
-				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(20.0F))
-				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(1))
-				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD)
-				.addProperty(AttackPhaseProperty.HIT_SOUND, EpicFightSounds.BLADE_RUSH_FINISHER)
-				.addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.BLADE_RUSH_SKILL)
-				.registerPropertiesToAnimation());
-		
+
 		//CHARGING_JUMP = registerSkill(new ChargingJumpSkill(ChargingJumpSkill.createBuilder()));
 		
 		SkillRegistryEvent skillRegistryEvent = new SkillRegistryEvent(SKILLS, LEARNABLE_SKILLS);
 		ModLoader.get().postEvent(skillRegistryEvent);
 	}
-	
+
+	static ResourceLocation getSkillRegName(Item item, String name) {
+		return new ResourceLocation(EpicFightMod.MODID,
+				name + "__" + item.getRegistryName().getNamespace()+ "_"+ item.getRegistryName().getPath());
+	}
+
 	private static Skill registerSkill(Skill skill) {
-		registerIfAbsent(SKILLS, skill);
-		
+		skill = registerIfAbsent(SKILLS, skill);
+
 		if (skill.getCategory().learnable()) {
 			registerIfAbsent(LEARNABLE_SKILLS, skill);
 		}
-		
+
 		return skill;
 	}
-	
-	private static void registerIfAbsent(Map<ResourceLocation, Skill> map, Skill skill) {
-		if (map.containsKey(skill.getRegistryName())) {
+
+	private static Skill registerSpecialSkill(ResourceLocation location, Function<ResourceLocation, Skill> skillSupplier) {
+		Skill skill = SKILLS.get(location);
+		if(skill != null) {
+			return skill;
+		}
+		skill = skillSupplier.apply(location);
+		SKILLS.put(location, skill);
+
+		if (skill.getCategory().learnable()) {
+			LEARNABLE_SKILLS.put(location, skill);
+		}
+
+		return skill;
+	}
+
+	private static Skill registerIfAbsent(Map<ResourceLocation, Skill> map, Skill skill) {
+		Skill s = map.get(skill.getRegistryName());
+		if (s != null) {
 			EpicFightMod.LOGGER.info("Duplicated skill name : " + skill.getRegistryName() + ". Registration was skipped.");
+			return s;
 		} else {
 			map.put(skill.getRegistryName(), skill);
+			return skill;
 		}
 	}
 }

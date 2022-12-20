@@ -43,6 +43,10 @@ public abstract class SpecialAttackSkill extends Skill {
 		super(builder);
 		this.properties = Lists.newArrayList();
 	}
+
+	public void setPhaseProperty(int phase, AttackPhaseProperty<?> property, Object value) {
+		properties.get(phase).put(property, value);
+	}
 	
 	@Override
 	public boolean canExecute(PlayerPatch<?> executer) {
@@ -100,20 +104,17 @@ public abstract class SpecialAttackSkill extends Skill {
 		armorNegation = armorNegationCorrector.getTotalValue((float)armorNegation);
 		impact = impactCorrector.getTotalValue((float)impact);
 		maxStrikes = maxStrikesCorrector.getTotalValue((float)maxStrikes);
-		
-		list.add(new TextComponent(title).withStyle(ChatFormatting.UNDERLINE).withStyle(ChatFormatting.GRAY));
+
+		list.add(new TranslatableComponent(title).withStyle(ChatFormatting.UNDERLINE).withStyle(ChatFormatting.GRAY));
 		
 		MutableComponent damageComponent = new TranslatableComponent("skill.epicfight.damage",
 				new TextComponent(ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(damage)).withStyle(ChatFormatting.RED)
 		).withStyle(ChatFormatting.DARK_GRAY);
-		
-		this.getProperty(AttackPhaseProperty.EXTRA_DAMAGE, propertyMap).ifPresent((extraDamage) -> {
-			damageComponent.append(new TranslatableComponent(extraDamage.toString(),
-					new TextComponent(ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(extraDamage.getArgument() * 100F) + "%").withStyle(ChatFormatting.RED)))
-				.withStyle(ChatFormatting.DARK_GRAY);
-		});
-		
 		list.add(damageComponent);
+
+		this.getProperty(AttackPhaseProperty.EXTRA_DAMAGE, propertyMap).ifPresent((extraDamage) -> {
+			extraDamage.getTooltip(list);
+		});
 		
 		if (armorNegation != 0.0D) {
 			list.add(new TranslatableComponent(EpicFightAttributes.ARMOR_NEGATION.get().getDescriptionId(),
@@ -144,6 +145,12 @@ public abstract class SpecialAttackSkill extends Skill {
 	@SuppressWarnings("unchecked")
 	protected <V> Optional<V> getProperty(AttackPhaseProperty<V> propertyType, Map<AttackPhaseProperty<?>, Object> map) {
 		return (Optional<V>) Optional.ofNullable(map.get(propertyType));
+	}
+
+	public <V> Optional<V> getProperty(int phase, AttackPhaseProperty<V> propertyType) {
+		if(phase < 0 || phase >= this.properties.size())
+			return Optional.empty();
+		return (Optional<V>) Optional.ofNullable(this.properties.get(phase).get(propertyType));
 	}
 	
 	public SpecialAttackSkill newPropertyLine() {

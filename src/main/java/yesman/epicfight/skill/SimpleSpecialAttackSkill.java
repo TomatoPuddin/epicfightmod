@@ -12,6 +12,7 @@ import yesman.epicfight.api.animation.types.AttackAnimation.Phase;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
+import yesman.epicfight.world.capabilities.item.WeaponCategory;
 
 public class SimpleSpecialAttackSkill extends SpecialAttackSkill {
 	public static class Builder extends Skill.Builder<SimpleSpecialAttackSkill> {
@@ -82,16 +83,27 @@ public class SimpleSpecialAttackSkill extends SpecialAttackSkill {
 	@Override
 	public List<Component> getTooltipOnItem(ItemStack itemStack, CapabilityItem cap, PlayerPatch<?> playerCap) {
 		List<Component> list = super.getTooltipOnItem(itemStack, cap, playerCap);
-		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(0), "Each Strike:");
+		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(0), "skill.epicfight.tooltip.each_strike");
 		
 		return list;
+	}
+
+	public SpecialAttackSkill setWeaponCategory(WeaponCategory weaponCategory) {
+		AttackAnimation anim = ((AttackAnimation)this.attackAnimation);
+		for(Phase phase : anim.phases) {
+			// phase.addProperties(this.properties.get(0).entrySet());
+			phase.setWeaponCategory(weaponCategory);
+		}
+
+		return this;
 	}
 	
 	@Override
 	public SpecialAttackSkill registerPropertiesToAnimation() {
 		AttackAnimation anim = ((AttackAnimation)this.attackAnimation);
 		for(Phase phase : anim.phases) {
-			phase.addProperties(this.properties.get(0).entrySet());
+			// phase.addProperties(this.properties.get(0).entrySet());
+			phase.setSkillPropertyGroupIndex(0);
 		}
 		
 		return this;

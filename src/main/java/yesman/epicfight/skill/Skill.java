@@ -94,9 +94,12 @@ public abstract class Skill {
 	protected final int requiredXp;
 	protected final ActivateType activateType;
 	protected final Resource resource;
+	protected ResourceLocation textureLocation;
+	protected String skillName;
 	
 	public Skill(Builder<? extends Skill> builder) {
 		this.registryName = builder.registryName;
+		this.skillName = registryName.getPath();
 		this.category = builder.category;
 		this.consumption = builder.consumption;
 		this.maxDuration = builder.maxDuration;
@@ -265,7 +268,7 @@ public abstract class Skill {
 	}
 	
 	public String getTranslatableText() {
-		return String.format("skill.%s.%s", this.getRegistryName().getNamespace(), this.getRegistryName().getPath());
+		return String.format("skill.%s.%s", this.getRegistryName().getNamespace(), this.skillName);
 	}
 	
 	public float getCooldownRegenPerSecond(PlayerPatch<?> player) {
@@ -315,11 +318,24 @@ public abstract class Skill {
 	public void drawOnGui(BattleModeGui gui, SkillContainer container, PoseStack matStackIn, float x, float y, float scale, int width, int height) {
 		
 	}
+
+	// without extension name
+	public Skill setName(String skillName) {
+		this.skillName = skillName;
+		return this;
+	}
+
+	public Skill setTextureName(ResourceLocation location) {
+		this.textureLocation = location;
+		return this;
+	}
 	
 	@OnlyIn(Dist.CLIENT)
 	public ResourceLocation getSkillTexture() {
-		ResourceLocation name = this.getRegistryName();
-		return new ResourceLocation(name.getNamespace(), "textures/gui/skills/" + name.getPath() + ".png");
+		if (textureLocation != null)
+			return textureLocation;
+		else
+			return new ResourceLocation(getRegistryName().getNamespace(), "textures/gui/skills/" + skillName + ".png");
 	}
 	
 	@OnlyIn(Dist.CLIENT)
@@ -333,7 +349,7 @@ public abstract class Skill {
 	}
 	
 	public Component getDisplayName() {
-		return new TranslatableComponent(String.format("%s.%s.%s", "skill", this.getRegistryName().getNamespace(), this.getRegistryName().getPath()));
+		return new TranslatableComponent(String.format("%s.%s.%s", "skill", this.getRegistryName().getNamespace(), this.skillName));
 	}
 	
 	public static enum ActivateType {

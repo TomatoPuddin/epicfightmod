@@ -27,9 +27,9 @@ public class SpecialAttackAnimation extends AttackAnimation {
 		float f = entitypatch.getDamageTo(target, source, phase.hand);
 		int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.SWEEPING_EDGE, entitypatch.getOriginal());
 		ValueCorrector cor = new ValueCorrector(0, (i > 0) ? 1.0F + (float)i / (float)(i + 1.0F) : 1.0F, 0);
-		phase.getProperty(AttackPhaseProperty.DAMAGE).ifPresent((opt) -> cor.merge(opt));
+		phase.getProperty(entitypatch, AttackPhaseProperty.DAMAGE).ifPresent((opt) -> cor.merge(opt));
 		float totalDamage = cor.getTotalValue(f);
-		ExtraDamageType extraCalculator = phase.getProperty(AttackPhaseProperty.EXTRA_DAMAGE).orElse(null);
+		ExtraDamageType extraCalculator = phase.getProperty(entitypatch, AttackPhaseProperty.EXTRA_DAMAGE).orElse(null);
 		
 		if (extraCalculator != null) {
 			totalDamage += extraCalculator.get(entitypatch.getOriginal(), target);

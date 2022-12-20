@@ -63,10 +63,16 @@ public class LethalSlicingSkill extends SpecialAttackSkill {
 	
 	@Override
 	public SpecialAttackSkill registerPropertiesToAnimation() {
+		/*
 		this.elbow.phases[0].addProperties(this.properties.get(0).entrySet());
 		this.swing.phases[0].addProperties(this.properties.get(1).entrySet());
 		this.doubleSwing.phases[0].addProperties(this.properties.get(1).entrySet());
 		this.doubleSwing.phases[1].addProperties(this.properties.get(1).entrySet());
+		*/
+		this.elbow.phases[0].setSkillPropertyGroupIndex(0).setWeaponCategory(CapabilityItem.WeaponCategories.TACHI);
+		this.swing.phases[0].setSkillPropertyGroupIndex(1).setWeaponCategory(CapabilityItem.WeaponCategories.TACHI);
+		this.doubleSwing.phases[0].setSkillPropertyGroupIndex(1).setWeaponCategory(CapabilityItem.WeaponCategories.TACHI);
+		this.doubleSwing.phases[1].setSkillPropertyGroupIndex(1).setWeaponCategory(CapabilityItem.WeaponCategories.TACHI);
 		return this;
 	}
 }

@@ -1,16 +1,8 @@
 package yesman.epicfight.api.animation.types;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -25,16 +17,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.registries.RegistryObject;
-import yesman.epicfight.api.animation.AnimationPlayer;
-import yesman.epicfight.api.animation.JointTransform;
-import yesman.epicfight.api.animation.Keyframe;
-import yesman.epicfight.api.animation.Pose;
-import yesman.epicfight.api.animation.TransformSheet;
-import yesman.epicfight.api.animation.property.AnimationProperty.ActionAnimationCoordSetter;
-import yesman.epicfight.api.animation.property.AnimationProperty.ActionAnimationProperty;
-import yesman.epicfight.api.animation.property.AnimationProperty.AttackAnimationProperty;
-import yesman.epicfight.api.animation.property.AnimationProperty.AttackPhaseProperty;
-import yesman.epicfight.api.animation.property.AnimationProperty.StaticAnimationProperty;
+import yesman.epicfight.api.animation.*;
+import yesman.epicfight.api.animation.property.AnimationProperty.*;
 import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.api.model.Model;
 import yesman.epicfight.api.utils.AttackResult;
@@ -47,14 +31,24 @@ import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Models;
 import yesman.epicfight.particle.HitParticleType;
+import yesman.epicfight.skill.SpecialAttackSkill;
 import yesman.epicfight.world.capabilities.entitypatch.HumanoidMobPatch;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
+import yesman.epicfight.world.capabilities.item.CapabilityItem;
+import yesman.epicfight.world.capabilities.item.WeaponCapability;
+import yesman.epicfight.world.capabilities.item.WeaponCategory;
 import yesman.epicfight.world.entity.eventlistener.AttackEndEvent;
 import yesman.epicfight.world.entity.eventlistener.DealtDamageEvent;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener.EventType;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public class AttackAnimation extends ActionAnimation {
 	protected static final ActionAnimationCoordSetter COMMON_COORD_SETTER = (self, entitypatch, transformSheet) -> {
@@ -193,7 +187,7 @@ public class AttackAnimation extends ActionAnimation {
 		List<Entity> list = collider.updateAndSelectCollideEntity(entitypatch, this, prevPoseTime, poseTime, phase.getColliderJointName(), this.getPlaySpeed(entitypatch));
 		
 		if (list.size() > 0) {
-			HitEntityList hitEntities = new HitEntityList(entitypatch, list, phase.getProperty(AttackPhaseProperty.HIT_PRIORITY).orElse(HitEntityList.Priority.DISTANCE));
+			HitEntityList hitEntities = new HitEntityList(entitypatch, list, phase.getProperty(entitypatch, AttackPhaseProperty.HIT_PRIORITY).orElse(HitEntityList.Priority.DISTANCE));
 			boolean flag1 = true;
 			int maxStrikes = this.getMaxStrikes(entitypatch, phase);
 			entitypatch.getOriginal().setLastHurtMob(list.get(0));
@@ -273,12 +267,12 @@ public class AttackAnimation extends ActionAnimation {
 	}
 	
 	protected int getMaxStrikes(LivingEntityPatch<?> entitypatch, Phase phase) {
-		return phase.getProperty(AttackPhaseProperty.MAX_STRIKES).map((valueCorrector) -> valueCorrector.getTotalValue(entitypatch.getMaxStrikes(phase.hand))).orElse(Float.valueOf(entitypatch.getMaxStrikes(phase.hand))).intValue();
+		return phase.getProperty(entitypatch, AttackPhaseProperty.MAX_STRIKES).map((valueCorrector) -> valueCorrector.getTotalValue(entitypatch.getMaxStrikes(phase.hand))).orElse(Float.valueOf(entitypatch.getMaxStrikes(phase.hand))).intValue();
 	}
 	
 	protected float getDamageTo(LivingEntityPatch<?> entitypatch, LivingEntity target, Phase phase, ExtendedDamageSource source) {
-		float totalDamage = phase.getProperty(AttackPhaseProperty.DAMAGE).map((valueCorrector) -> valueCorrector.getTotalValue(entitypatch.getDamageTo(target, source, phase.hand))).orElse(entitypatch.getDamageTo(target, source, phase.hand));
-		ExtraDamageType extraCalculator = phase.getProperty(AttackPhaseProperty.EXTRA_DAMAGE).orElse(null);
+		float totalDamage = phase.getProperty(entitypatch, AttackPhaseProperty.DAMAGE).map((valueCorrector) -> valueCorrector.getTotalValue(entitypatch.getDamageTo(target, source, phase.hand))).orElse(entitypatch.getDamageTo(target, source, phase.hand));
+		ExtraDamageType extraCalculator = phase.getProperty(entitypatch, AttackPhaseProperty.EXTRA_DAMAGE).orElse(null);
 		
 		if (extraCalculator != null) {
 			totalDamage += extraCalculator.get(entitypatch.getOriginal(), target);
@@ -288,29 +282,29 @@ public class AttackAnimation extends ActionAnimation {
 	}
 	
 	protected SoundEvent getSwingSound(LivingEntityPatch<?> entitypatch, Phase phase) {
-		return phase.getProperty(AttackPhaseProperty.SWING_SOUND).orElse(entitypatch.getSwingSound(phase.hand));
+		return phase.getProperty(entitypatch, AttackPhaseProperty.SWING_SOUND).orElse(entitypatch.getSwingSound(phase.hand));
 	}
 	
 	protected SoundEvent getHitSound(LivingEntityPatch<?> entitypatch, Phase phase) {
-		return phase.getProperty(AttackPhaseProperty.HIT_SOUND).orElse(entitypatch.getWeaponHitSound(phase.hand));
+		return phase.getProperty(entitypatch, AttackPhaseProperty.HIT_SOUND).orElse(entitypatch.getWeaponHitSound(phase.hand));
 	}
 	
 	protected ExtendedDamageSource getExtendedDamageSource(LivingEntityPatch<?> entitypatch, Entity target, Phase phase) {
-		StunType stunType = phase.getProperty(AttackPhaseProperty.STUN_TYPE).orElse(StunType.SHORT);
+		StunType stunType = phase.getProperty(entitypatch, AttackPhaseProperty.STUN_TYPE).orElse(StunType.SHORT);
 		ExtendedDamageSource extendedSource = entitypatch.getDamageSource(stunType, this, phase.hand);
 		
-		phase.getProperty(AttackPhaseProperty.ARMOR_NEGATION).ifPresent((opt) -> {
+		phase.getProperty(entitypatch, AttackPhaseProperty.ARMOR_NEGATION).ifPresent((opt) -> {
 			extendedSource.setArmorNegation(opt.getTotalValue(extendedSource.getArmorNegation()));
 		});
-		phase.getProperty(AttackPhaseProperty.IMPACT).ifPresent((opt) -> {
+		phase.getProperty(entitypatch, AttackPhaseProperty.IMPACT).ifPresent((opt) -> {
 			extendedSource.setImpact(opt.getTotalValue(extendedSource.getImpact()));
 		});
 		
-		phase.getProperty(AttackPhaseProperty.FINISHER).ifPresent((opt) -> {
+		phase.getProperty(entitypatch, AttackPhaseProperty.FINISHER).ifPresent((opt) -> {
 			extendedSource.setFinisher(opt);
 		});
 		
-		phase.getProperty(AttackPhaseProperty.SOURCE_LOCATION_PROVIDER).ifPresent((opt) -> {
+		phase.getProperty(entitypatch, AttackPhaseProperty.SOURCE_LOCATION_PROVIDER).ifPresent((opt) -> {
 			extendedSource.setInitialPosition(opt.apply(entitypatch));
 		});
 		
@@ -318,7 +312,7 @@ public class AttackAnimation extends ActionAnimation {
 	}
 	
 	protected void spawnHitParticle(ServerLevel world, LivingEntityPatch<?> attacker, Entity hit, Phase phase) {
-		Optional<RegistryObject<HitParticleType>> particleOptional = phase.getProperty(AttackPhaseProperty.PARTICLE);
+		Optional<RegistryObject<HitParticleType>> particleOptional = phase.getProperty(attacker, AttackPhaseProperty.PARTICLE);
 		HitParticleType particle = particleOptional.isPresent() ? particleOptional.get().get() : attacker.getWeaponHitParticle(phase.hand);
 		particle.spawnParticleWithArgument(world, null, null, hit, attacker.getOriginal());
 	}
@@ -421,6 +415,8 @@ public class AttackAnimation extends ActionAnimation {
 		protected final String jointName;
 		protected final InteractionHand hand;
 		protected Collider collider;
+		private int skillPropertyGroupIndex;
+		private WeaponCategory weaponCategory;
 		
 		public Phase(float start, float antic, float contact, float recovery, float end, String jointName, Collider collider) {
 			this(start, antic, contact, recovery, end, InteractionHand.MAIN_HAND, jointName, collider);
@@ -445,6 +441,16 @@ public class AttackAnimation extends ActionAnimation {
 			this.jointName = jointName;
 			this.hand = hand;
 		}
+
+		public Phase setSkillPropertyGroupIndex(int index) {
+			this.skillPropertyGroupIndex = index;
+			return this;
+		}
+
+		public Phase setWeaponCategory(WeaponCategory weaponCategory) {
+			this.weaponCategory = weaponCategory;
+			return this;
+		}
 		
 		public <V> Phase addProperty(AttackPhaseProperty<V> propertyType, V value) {
 			this.properties.put(propertyType, value);
@@ -458,7 +464,24 @@ public class AttackAnimation extends ActionAnimation {
 		}
 		
 		@SuppressWarnings("unchecked")
-		protected <V> Optional<V> getProperty(AttackPhaseProperty<V> propertyType) {
+		protected <V> Optional<V> getPropertyLegacy(AttackPhaseProperty<V> propertyType) {
+			return (Optional<V>) Optional.ofNullable(this.properties.get(propertyType));
+		}
+
+		protected <V> Optional<V> getProperty(LivingEntityPatch<?> patch, AttackPhaseProperty<V> propertyType) {
+			CapabilityItem cap = patch.getHoldingItemCapability(getHand());
+			if (cap != null && cap != CapabilityItem.EMPTY && cap instanceof WeaponCapability) {
+				WeaponCapability weaponCap = (WeaponCapability) cap;
+				if(weaponCap.getWeaponCategory() == this.weaponCategory) {
+					SpecialAttackSkill skill = (SpecialAttackSkill) weaponCap.getSpecialAttack(patch);
+					if (skill != null) {
+						Optional<V> value = skill.getProperty(skillPropertyGroupIndex, propertyType);
+						if (value.isPresent())
+							return value;
+					}
+				}
+			}
+
 			return (Optional<V>) Optional.ofNullable(this.properties.get(propertyType));
 		}
 		

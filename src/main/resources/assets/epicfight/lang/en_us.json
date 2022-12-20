@@ -143,6 +143,12 @@
 	"key.epicfight.weapon_special_skill" : "Weapon Special Skill",
 	"key.epicfight.skill_gui" : "Open Skill Editor",
 	"key.epicfight.dodge" : "Dodge",
+
+	"skill.epicfight.tooltip.each_strike": "Each Strike:",
+	"skill.epicfight.tooltip.last_strike": "Last Strike:",
+	"skill.epicfight.tooltip.first_strike": "First Strike:",
+	"skill.epicfight.tooltip.second_strike": "Second Strike:",
+	"skill.epicfight.tooltip.elbow_strike": "Elbow Strike:",
 	
 	"skill.epicfight.dancing_edge" : "Dancing Edge",
 	"skill.epicfight.dancing_edge.tooltip" : "Cut down enemies with a swordsmanship that looks like a dancing. It strikes totally three times",
@@ -192,5 +198,14 @@
 	"skill.epicfight.guard.category" : "Guard Skill",
 	
 	"skill.epicfight.damage" : "%s damage",
-	"skill.epicfight.percent_of_target_lost_health" : " + %s of the target lost health"
-}
+
+	"skill.epicfight.extra_damage.target_lost_health" : "append %s% of the target lost health as damage",
+	"skill.epicfight.extra_damage.target_health" : "append %s% of the target health as damage",
+	"skill.epicfight.extra_damage.target_max_health" : "append %s% of the target lost health as damage",
+
+	"skill.epicfight.extra_damage.attacker_lost_health" : "append %s% of the attacker lost health as damage",
+	"skill.epicfight.extra_damage.attacker_health" : "append %s% of the attacker lost health as damage",
+	"skill.epicfight.extra_damage.attacker_max_health" : "append %s% of the attacker lost health as damage",
+
+	"skill.epicfight.extra_damage.attacker_xp_level" : "append %s% of the attacker xp level as damage",
+	"skill.epicfight.extra_damage.attacker_hunger" : "append %s% of the attacker hunger as damage"}

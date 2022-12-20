@@ -3,6 +3,7 @@ package yesman.epicfight.gameasset;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
+import yesman.epicfight.config.ConfigManager;
 import yesman.epicfight.main.EpicFightMod;
 
 public class EpicFightSounds {
@@ -59,5 +60,8 @@ public class EpicFightSounds {
 	    	BUZZ, 
 	    	LASER_BLAST
 	    );
+		for(String name: ConfigManager.ADDITIONAL_SOUND.get()) {
+			event.getRegistry().register(registerSound(name));
+		}
 	}
 }

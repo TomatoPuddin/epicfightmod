@@ -1,7 +1,9 @@
 package yesman.epicfight.api.data.reloader;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -13,10 +15,7 @@ import com.google.gson.JsonElement;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.TagParser;
+import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -29,11 +28,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.apache.commons.lang3.tuple.MutablePair;
+import yesman.epicfight.api.animation.property.AnimationProperty;
 import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.api.collider.MultiOBBCollider;
 import yesman.epicfight.api.collider.OBBCollider;
+import yesman.epicfight.api.utils.math.ExtraDamageType;
+import yesman.epicfight.api.utils.math.ValueCorrector;
 import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.network.server.SPDatapackSync;
+import yesman.epicfight.skill.SpecialAttackSkill;
 import yesman.epicfight.world.capabilities.item.ArmorCapability;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.capabilities.item.Style;
@@ -81,7 +85,12 @@ public class ItemCapabilityReloadListener extends SimpleJsonResourceReloadListen
 					ProviderItem.put(item, capability);
 					CAPABILITY_ARMOR_DATA_MAP.put(item, nbt);
 				} else if (str[0].equals("weapons")) {
-					CapabilityItem capability = deserializeWeapon(item, nbt, null);
+					CapabilityItem capability = null;
+					try {
+						capability = deserializeWeapon(item, nbt, null);
+					} catch (Exception e) {
+						throw new RuntimeException("fail to parse EpicFight custom item data pack:" + registryName.toString(), e);
+					}
 					ProviderItem.put(item, capability);
 					CAPABILITY_WEAPON_DATA_MAP.put(item, nbt);
 				}
@@ -104,7 +113,7 @@ public class ItemCapabilityReloadListener extends SimpleJsonResourceReloadListen
 		return builder.build();
 	}
 	
-	public static CapabilityItem deserializeWeapon(Item item, CompoundTag tag, CapabilityItem.Builder defaultCapability) {
+	public static CapabilityItem deserializeWeapon(Item item, CompoundTag tag, CapabilityItem.Builder defaultCapability) throws Exception {
 		CapabilityItem capability;
 		
 		if (tag.contains("variations")) {
@@ -156,6 +165,61 @@ public class ItemCapabilityReloadListener extends SimpleJsonResourceReloadListen
 					}
 				}
 			}
+
+			if (tag.contains("special_skills")) {
+				WeaponCapability.Builder weaponBuilder = (WeaponCapability.Builder)builder;
+				CompoundTag skillTags = tag.getCompound("special_skills");
+
+				for (String key : skillTags.getAllKeys()) {
+					SpecialAttackSkill skill = weaponBuilder.getSpecialAttackSkill(Style.ENUM_MANAGER.get(key));
+					CompoundTag skillTag = skillTags.getCompound(key);
+					if(skillTag.contains("attributes")) {
+						CompoundTag skillAttrTag = skillTag.getCompound("attributes");
+						for (String skillPhaseStr : skillAttrTag.getAllKeys()) {
+							CompoundTag skillPhaseAttrTag = skillAttrTag.getCompound(skillPhaseStr);
+							int skillPhase = Integer.parseInt(skillPhaseStr) - 1;
+
+							for (String attrName : skillPhaseAttrTag.getAllKeys()) {
+								if(attrName.equals("max_strikes")) {
+									skill.setPhaseProperty(skillPhase,
+											AnimationProperty.AttackPhaseProperty.MAX_STRIKES,
+											readValueCorrector(skillPhaseAttrTag.getCompound(attrName)));
+								} else if(attrName.equals("damage")) {
+									skill.setPhaseProperty(skillPhase,
+											AnimationProperty.AttackPhaseProperty.DAMAGE,
+											readValueCorrector(skillPhaseAttrTag.getCompound(attrName)));
+								} else if(attrName.equals("extra_damage")) {
+									skill.setPhaseProperty(skillPhase,
+											AnimationProperty.AttackPhaseProperty.EXTRA_DAMAGE,
+											readExtraDamage(skillPhaseAttrTag.getCompound(attrName)));
+								} else if(attrName.equals("armor_negation")) {
+									skill.setPhaseProperty(skillPhase,
+											AnimationProperty.AttackPhaseProperty.ARMOR_NEGATION,
+											readValueCorrector(skillPhaseAttrTag.getCompound(attrName)));
+								} else if(attrName.equals("impact")) {
+									skill.setPhaseProperty(skillPhase,
+											AnimationProperty.AttackPhaseProperty.IMPACT,
+											readValueCorrector(skillPhaseAttrTag.getCompound(attrName)));
+								} else if(attrName.equals("hit_sound")) {
+									skill.setPhaseProperty(skillPhase,
+											AnimationProperty.AttackPhaseProperty.HIT_SOUND,
+											ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(skillPhaseAttrTag.getString(attrName))));
+								} else if(attrName.equals("swing_sound")) {
+									skill.setPhaseProperty(skillPhase,
+											AnimationProperty.AttackPhaseProperty.SWING_SOUND,
+											ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(skillPhaseAttrTag.getString(attrName))));
+								}
+							}
+						}
+					}
+					if(skillTag.contains("texture")) {
+						skill.setTextureName(new ResourceLocation(skillTag.getString("texture")));
+					}
+					if(skillTag.contains("name")) {
+						skill.setName(skillTag.getString("name"));
+					}
+				}
+			}
 			
 			if (tag.contains("collider") && builder instanceof WeaponCapability.Builder) {
 				CompoundTag colliderTag = tag.getCompound("collider");
@@ -168,7 +232,29 @@ public class ItemCapabilityReloadListener extends SimpleJsonResourceReloadListen
 		
 		return capability;
 	}
-	
+
+	private static ExtraDamageType readExtraDamage(CompoundTag nbt) throws Exception {
+		Set<String> keys = nbt.getAllKeys();
+		List<Map.Entry<String, int[]>> list = new ArrayList<>();
+		for (String key :keys) {
+			list.add(new MutablePair<>(key,  ((ListTag)nbt.get(key)).stream().mapToInt(n -> ((NumericTag)n).getAsInt()).toArray()));
+		}
+		return ExtraDamageType.get(list);
+	}
+
+	private static ValueCorrector readValueCorrector(CompoundTag nbt) {
+		float adder = 0f;
+		float multipliers = 1f;
+		float setters = 0f;
+		if (nbt.contains("adder"))
+			adder = nbt.getFloat("adder");
+		if (nbt.contains("multiplier"))
+			multipliers = nbt.getFloat("multiplier");
+		if (nbt.contains("setter"))
+			setters = nbt.getFloat("setter");
+		return new ValueCorrector(adder, multipliers, setters);
+	}
+
 	private static Map<Attribute, AttributeModifier> deserializeAttributes(CompoundTag tag) {
 		Map<Attribute, AttributeModifier> modifierMap = Maps.newHashMap();
 		
@@ -282,7 +368,11 @@ public class ItemCapabilityReloadListener extends SimpleJsonResourceReloadListen
 			});
 			
 			CAPABILITY_WEAPON_DATA_MAP.forEach((item, tag) -> {
-				ProviderItem.put(item, deserializeWeapon(item, tag, null));
+				try {
+					ProviderItem.put(item, deserializeWeapon(item, tag, null));
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
 			});
 			
 			ProviderItem.addDefaultItems();

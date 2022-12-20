@@ -1,10 +1,12 @@
 package yesman.epicfight.config;
 
 import java.io.File;
+import java.util.List;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 
+import com.google.common.collect.Lists;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.loading.FMLPaths;
 import yesman.epicfight.main.EpicFightMod;
@@ -21,6 +23,7 @@ public class ConfigManager {
 	public static final ForgeConfigSpec.IntValue WEIGHT_PENALTY;
 	public static final ForgeConfigSpec.BooleanValue SKILLBOOK_MOB_LOOT;
 	public static final ForgeConfigSpec.BooleanValue SKILLBOOK_CHEST_LOOT;
+	public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ADDITIONAL_SOUND;
 	
 	static {
 		CommentedFileConfig file = CommentedFileConfig.builder(new File(FMLPaths.CONFIGDIR.get().resolve(EpicFightMod.CONFIG_FILE_PATH).toString())).sync().autosave().writingMode(WritingMode.REPLACE).build();
@@ -35,7 +38,8 @@ public class ConfigManager {
 		WEIGHT_PENALTY = server.defineInRange("default_gamerule.weightPenalty", 100, 0, 100);
 		SKILLBOOK_MOB_LOOT = server.define("loot.skill_book_mob_loot", true);
 		SKILLBOOK_CHEST_LOOT = server.define("loot.skill_book_chest_loot", true);
-		
+		ADDITIONAL_SOUND = server.defineList("additional_sound", Lists.newArrayList(), (element) -> element instanceof String);
+
 		INGAME_CONFIG = new ClientConfig(client);
 		CLIENT_CONFIG = client.build();
 		COMMON_CONFIG = server.build();

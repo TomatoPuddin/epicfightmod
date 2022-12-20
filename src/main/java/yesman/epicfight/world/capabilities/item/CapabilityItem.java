@@ -110,7 +110,7 @@ public class CapabilityItem {
 		}
 	}
 	
-	public List<StaticAnimation> getAutoAttckMotion(PlayerPatch<?> playerpatch) {
+	public List<StaticAnimation> getAutoAttckMotion(LivingEntityPatch<?> playerpatch) {
 		return getBasicAutoAttackMotion();
 	}
 
@@ -119,7 +119,7 @@ public class CapabilityItem {
 	}
 	
 	@Nullable
-	public Skill getSpecialAttack(PlayerPatch<?> playerpatch) {
+	public Skill getSpecialAttack(LivingEntityPatch<?> playerpatch) {
 		return null;
 	}
 	

@@ -66,8 +66,12 @@ public class EviscerateSkill extends SpecialAttackSkill {
 	public SpecialAttackSkill registerPropertiesToAnimation() {
 		AttackAnimation _first = ((AttackAnimation)this.first);
 		AttackAnimation _second = ((AttackAnimation)this.second);
+		/*
 		_first.phases[0].addProperties(this.properties.get(0).entrySet());
 		_second.phases[0].addProperties(this.properties.get(1).entrySet());
+		*/
+		_first.phases[0].setSkillPropertyGroupIndex(0).setWeaponCategory(CapabilityItem.WeaponCategories.DAGGER);
+		_second.phases[0].setSkillPropertyGroupIndex(1).setWeaponCategory(CapabilityItem.WeaponCategories.DAGGER);
 		
 		return this;
 	}

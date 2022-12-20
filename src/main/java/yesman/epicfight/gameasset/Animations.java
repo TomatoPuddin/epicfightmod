@@ -74,10 +74,7 @@ import yesman.epicfight.api.model.Model;
 import yesman.epicfight.api.utils.ExtendedDamageSource;
 import yesman.epicfight.api.utils.ExtendedDamageSource.StunType;
 import yesman.epicfight.api.utils.HitEntityList.Priority;
-import yesman.epicfight.api.utils.math.MathUtils;
-import yesman.epicfight.api.utils.math.OpenMatrix4f;
-import yesman.epicfight.api.utils.math.ValueCorrector;
-import yesman.epicfight.api.utils.math.Vec3f;
+import yesman.epicfight.api.utils.math.*;
 import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.particle.EpicFightParticles;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
@@ -1235,17 +1232,32 @@ public class Animations {
 				.addProperty(AttackAnimationProperty.ROTATE_X, true)
 				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.6F)
 				.addProperty(AttackAnimationProperty.COLLIDER_ADDER, 1);
+		((AttackAnimation)SWEEPING_EDGE).phases[0]
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.adder(1))
+				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.multiplier(2.0F))
+				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(20.0F))
+				.addProperty(AttackPhaseProperty.IMPACT, ValueCorrector.multiplier(1.6F))
+				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.LONG);
 		
 		DANCING_EDGE = new SpecialAttackAnimation(0.25F, "biped/skill/dancing_edge", biped,
 				new Phase(0.0F, 0.2F, 0.31F, 0.4F, 0.4F, "Tool_R", null), new Phase(0.4F, 0.5F, 0.61F, 0.65F, 0.65F, InteractionHand.OFF_HAND, "Tool_L", null),
 				new Phase(0.65F, 0.75F, 0.85F, 1.15F, Float.MAX_VALUE, "Tool_R", null))
 				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.6F)
 				.addProperty(ActionAnimationProperty.MOVE_VERTICAL, true);
+		((AttackAnimation)DANCING_EDGE).phases[0]
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.adder(1))
+				.addProperty(AttackPhaseProperty.IMPACT, ValueCorrector.multiplier(1.2F));
 		
 		GUILLOTINE_AXE = new SpecialAttackAnimation(0.08F, 0.2F, 0.5F, 0.65F, 1.0F, null, "Tool_R", "biped/skill/guillotine_axe", biped)
 				.addProperty(AttackAnimationProperty.LOCK_ROTATION, true)
 				.addProperty(ActionAnimationProperty.MOVE_VERTICAL, true)
 				.addProperty(StaticAnimationProperty.PLAY_SPEED, 1.0F);
+		((AttackAnimation)GUILLOTINE_AXE).phases[0]
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(1))
+				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.multiplier(2.5F))
+				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(20.0F))
+				.addProperty(AttackPhaseProperty.IMPACT, ValueCorrector.multiplier(2.0F))
+				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.LONG);
 		
 		SPEAR_THRUST = new SpecialAttackAnimation(0.11F, "biped/skill/spear_thrust", biped,
 				new Phase(0.0F, 0.3F, 0.36F, 0.5F, 0.5F, "Tool_R", null), new Phase(0.5F, 0.5F, 0.56F, 0.75F, 0.75F, "Tool_R", null),
@@ -1253,12 +1265,20 @@ public class Animations {
 				.addProperty(AttackAnimationProperty.LOCK_ROTATION, true)
 				.addProperty(AttackAnimationProperty.ROTATE_X, true)
 				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.2F);
+		((AttackAnimation)SPEAR_THRUST).phases[0]
+				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(10.0F))
+				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD);
+
 		
 		SPEAR_SLASH = new SpecialAttackAnimation(0.1F, "biped/skill/spear_slash", biped,
 				new Phase(0.0F, 0.2F, 0.41F, 0.5F, 0.5F, "Tool_R", null), new Phase(0.5F, 0.5F, 0.75F, 0.95F, 1.25F, Float.MAX_VALUE, "Tool_R", null))
 				.addProperty(AttackAnimationProperty.LOCK_ROTATION, true)
 				.addProperty(AttackAnimationProperty.ROTATE_X, true)
 				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.2F);
+		((AttackAnimation)SPEAR_SLASH).phases[0]
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.adder(4))
+				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.multiplier(1.25F))
+				.addProperty(AttackPhaseProperty.IMPACT, ValueCorrector.multiplier(1.2F));
 		
 		GIANT_WHIRLWIND = new SpecialAttackAnimation(0.41F, "biped/skill/giant_whirlwind", biped,
 				new Phase(0.0F, 0.3F, 0.35F, 0.55F, 0.9F, 0.9F, "Tool_R", null), new Phase(0.9F, 0.95F, 1.05F, 1.2F, 1.5F, 1.5F, "Tool_R", null),
@@ -1266,12 +1286,19 @@ public class Animations {
 				.addProperty(AttackAnimationProperty.ROTATE_X, true)
 				.addProperty(AttackAnimationProperty.FIXED_MOVE_DISTANCE, true)
 				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.0F);
+		((AttackAnimation)GIANT_WHIRLWIND).phases[0]
+				.addProperty(AttackPhaseProperty.IMPACT, ValueCorrector.multiplier(1.4F));
 		
 		FATAL_DRAW = new SpecialAttackAnimation(0.15F, 0.0F, 0.7F, 0.81F, 1.0F, ColliderPreset.FATAL_DRAW, "Root", "biped/skill/fatal_draw", biped)
 				.addProperty(AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH_SHARP)
 				.addProperty(AttackAnimationProperty.LOCK_ROTATION, true)
 				.addProperty(StaticAnimationProperty.PLAY_SPEED, 1.0F)
 				.addProperty(StaticAnimationProperty.EVENTS, new Event[] {Event.create(0.05F, ReuseableEvents.KATANA_IN, Event.Side.SERVER)});
+		((AttackAnimation)FATAL_DRAW).phases[0]
+				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.multiplier(2.0F))
+				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(50.0F))
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.adder(6))
+				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD);
 		
 		FATAL_DRAW_DASH = new SpecialAttackAnimation(0.15F, 0.43F, 0.85F, 0.851F, 1.4F, ColliderPreset.FATAL_DRAW_DASH, "Root", "biped/skill/fatal_draw_dash", biped)
 				.addProperty(AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH_SHARP)
@@ -1283,37 +1310,85 @@ public class Animations {
 					Entity entity = entitypatch.getOriginal();
 					entitypatch.getOriginal().level.addParticle(EpicFightParticles.ENTITY_AFTER_IMAGE.get(), entity.getX(), entity.getY(), entity.getZ(), Double.longBitsToDouble(entity.getId()), 0, 0);
 				}, Side.CLIENT)});
+		((AttackAnimation)FATAL_DRAW_DASH).phases[0]
+				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.multiplier(2.0F))
+				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(50.0F))
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.adder(6))
+				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD);
 		
 		LETHAL_SLICING = new SpecialAttackAnimation(0.15F, 0.0F, 0.0F, 0.11F, 0.38F, ColliderPreset.FIST_FIXED, "Root", "biped/skill/lethal_slicing_start", biped)
 				.addProperty(AttackAnimationProperty.LOCK_ROTATION, true)
 				.addProperty(StaticAnimationProperty.PLAY_SPEED, 1.0F);
+		((AttackAnimation)LETHAL_SLICING).phases[0]
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(2))
+				.addProperty(AttackPhaseProperty.IMPACT, ValueCorrector.setter(0.5F))
+				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.setter(1.0F))
+				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.LONG)
+				.addProperty(AttackPhaseProperty.HIT_SOUND, EpicFightSounds.BLUNT_HIT)
+				.addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.HIT_BLUNT);
 		
 		LETHAL_SLICING_ONCE = new SpecialAttackAnimation(0.016F, 0.0F, 0.0F, 0.1F, 0.6F, ColliderPreset.FATAL_DRAW, "Root", "biped/skill/lethal_slicing_once", biped)
 				.addProperty(AttackAnimationProperty.LOCK_ROTATION, true)
 				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.6F);
-		
+		((AttackAnimation)LETHAL_SLICING_ONCE).phases[0]
+				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(50.0F))
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.adder(2))
+				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.multiplier(1.7F))
+				.addProperty(AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH_SHARP);
+
+
 		LETHAL_SLICING_TWICE = new SpecialAttackAnimation(0.016F, "biped/skill/lethal_slicing_twice", biped,
 				new Phase(0.0F, 0.0F, 0.1F, 0.15F, 0.15F, "Root", ColliderPreset.FATAL_DRAW), new Phase(0.15F, 0.15F, 0.25F, 0.6F, Float.MAX_VALUE, "Root", ColliderPreset.FATAL_DRAW))
 				.addProperty(AttackAnimationProperty.LOCK_ROTATION, true)
 				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.6F);
-		
+		((AttackAnimation)LETHAL_SLICING_TWICE).phases[0]
+				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(50.0F))
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.adder(2))
+				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.multiplier(1.7F))
+				.addProperty(AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH_SHARP);
+		((AttackAnimation)LETHAL_SLICING_TWICE).phases[1]
+				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(50.0F))
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.adder(2))
+				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.multiplier(1.7F))
+				.addProperty(AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH_SHARP);
+
+
 		RELENTLESS_COMBO = new SpecialAttackAnimation(0.05F, "biped/skill/relentless_combo", biped,
 				new Phase(0.0F, 0.016F, 0.066F, 0.133F, 0.133F, InteractionHand.OFF_HAND, "Root", ColliderPreset.FIST_FIXED), new Phase(0.133F, 0.133F, 0.183F, 0.25F, 0.25F, "Root", ColliderPreset.FIST_FIXED),
 				new Phase(0.25F, 0.25F, 0.3F, 0.366F, 0.366F, InteractionHand.OFF_HAND, "Root", ColliderPreset.FIST_FIXED), new Phase(0.366F, 0.366F, 0.416F, 0.483F, 0.483F, "Root", ColliderPreset.FIST_FIXED),
 				new Phase(0.483F, 0.483F, 0.533F, 0.6F, 0.6F, InteractionHand.OFF_HAND, "Root", ColliderPreset.FIST_FIXED), new Phase(0.6F, 0.6F, 0.65F, 0.716F, 0.716F, "Root", ColliderPreset.FIST_FIXED),
 				new Phase(0.716F, 0.716F, 0.766F, 0.833F, 0.833F, InteractionHand.OFF_HAND, "Root", ColliderPreset.FIST_FIXED), new Phase(0.833F, 0.833F, 0.883F, 1.1F, 1.1F, "Root", ColliderPreset.FIST_FIXED))
 				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 4.0F);
-		
+		((AttackAnimation)RELENTLESS_COMBO).phases[0]
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(1))
+				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD)
+				.addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.HIT_BLUNT);
+
+
 		EVISCERATE_FIRST = new SpecialAttackAnimation(0.08F, 0.05F, 0.05F, 0.15F, 0.45F, null, "Tool_R", "biped/skill/eviscerate_first", biped)
 				.addProperty(AttackAnimationProperty.LOCK_ROTATION, true)
 				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 2.4F);
-		
 		EVISCERATE_SECOND = new SpecialAttackAnimation(0.15F, 0.0F, 0.0F, 0.0F, 0.4F, null, "Tool_R", "biped/skill/eviscerate_second", biped)
 				.addProperty(AttackAnimationProperty.LOCK_ROTATION, true)
 				.addProperty(AttackPhaseProperty.HIT_SOUND, EpicFightSounds.EVISCERATE)
 				.addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.EVISCERATE)
 				.addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 2.4F);
-		
+
+		((AttackAnimation)EVISCERATE_FIRST).phases[0]
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(1))
+				.addProperty(AttackPhaseProperty.IMPACT, ValueCorrector.setter(2.0F))
+				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD);
+		try {
+			((AttackAnimation)EVISCERATE_SECOND).phases[0]
+					.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(1))
+					.addProperty(AttackPhaseProperty.EXTRA_DAMAGE, ExtraDamageType.get("target_lost_health",new int[] {20, 30}))
+					.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(50.0F))
+					.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.LONG);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+
 		BLADE_RUSH_FIRST = new SpecialAttackAnimation(0.1F, 0.0F, 0.0F, 0.06F, 0.3F, ColliderPreset.BLADE_RUSH, "Root", "biped/skill/blade_rush_first", biped)
 				.addProperty(AttackAnimationProperty.FIXED_MOVE_DISTANCE, true)
 				.addProperty(AttackPhaseProperty.HIT_PRIORITY, Priority.TARGET)
@@ -1330,6 +1405,20 @@ public class Animations {
 				.addProperty(AttackAnimationProperty.FIXED_MOVE_DISTANCE, true)
 				.addProperty(AttackPhaseProperty.HIT_PRIORITY, Priority.TARGET)
 				.addProperty(StaticAnimationProperty.PLAY_SPEED, 1.0F);
+
+		((AttackAnimation)BLADE_RUSH_FIRST).phases[0]
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(1));
+		((AttackAnimation)BLADE_RUSH_SECOND).phases[0]
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(1));
+		((AttackAnimation)BLADE_RUSH_THIRD).phases[0]
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(1));
+		((AttackAnimation)BLADE_RUSH_FINISHER).phases[0]
+				.addProperty(AttackPhaseProperty.DAMAGE, ValueCorrector.multiplier(2.5F))
+				.addProperty(AttackPhaseProperty.ARMOR_NEGATION, ValueCorrector.adder(20.0F))
+				.addProperty(AttackPhaseProperty.MAX_STRIKES, ValueCorrector.setter(1))
+				.addProperty(AttackPhaseProperty.STUN_TYPE, StunType.HOLD)
+				.addProperty(AttackPhaseProperty.HIT_SOUND, EpicFightSounds.BLADE_RUSH_FINISHER)
+				.addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.BLADE_RUSH_SKILL);
 	}
 	
 	private static class ReuseableEvents {

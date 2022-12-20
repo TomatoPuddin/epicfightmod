@@ -33,7 +33,7 @@ public class WeaponCapabilityPresets {
 			.collider(ColliderPreset.TOOLS)
 			.newStyleCombo(Styles.ONE_HAND, Animations.AXE_AUTO1, Animations.AXE_AUTO2, Animations.AXE_DASH, Animations.AXE_AIRSLASH)
 			.newStyleCombo(Styles.MOUNT, Animations.SWORD_MOUNT_ATTACK)
-			.specialAttack(Styles.ONE_HAND, Skills.GUILLOTINE_AXE)
+			.specialAttack(Styles.ONE_HAND, Skills.GUILLOTINE_AXE.apply(item))
 			.livingMotionModifier(Styles.ONE_HAND, LivingMotions.BLOCK, Animations.SWORD_GUARD);
 		
 		if (item instanceof TieredItem) {
@@ -105,8 +105,8 @@ public class WeaponCapabilityPresets {
 			.newStyleCombo(Styles.ONE_HAND, Animations.SWORD_AUTO1, Animations.SWORD_AUTO2, Animations.SWORD_AUTO3, Animations.SWORD_DASH, Animations.SWORD_AIR_SLASH)
 			.newStyleCombo(Styles.TWO_HAND, Animations.SWORD_DUAL_AUTO1, Animations.SWORD_DUAL_AUTO2, Animations.SWORD_DUAL_AUTO3, Animations.SWORD_DUAL_DASH, Animations.SWORD_DUAL_AIR_SLASH)
 			.newStyleCombo(Styles.MOUNT, Animations.SWORD_MOUNT_ATTACK)
-			.specialAttack(Styles.ONE_HAND, Skills.SWEEPING_EDGE)
-			.specialAttack(Styles.TWO_HAND, Skills.DANCING_EDGE)
+			.specialAttack(Styles.ONE_HAND, Skills.SWEEPING_EDGE.apply(item))
+			.specialAttack(Styles.TWO_HAND, Skills.DANCING_EDGE.apply(item))
 			.livingMotionModifier(Styles.ONE_HAND, LivingMotions.BLOCK, Animations.SWORD_GUARD)
 			.livingMotionModifier(Styles.TWO_HAND, LivingMotions.BLOCK, Animations.SWORD_DUAL_GUARD)
 			.weaponCombinationPredicator((entitypatch) -> EpicFightCapabilities.getItemStackCapability(entitypatch.getOriginal().getOffhandItem()).weaponCategory == WeaponCategories.SWORD);
@@ -129,8 +129,8 @@ public class WeaponCapabilityPresets {
 			.newStyleCombo(Styles.ONE_HAND, Animations.SPEAR_ONEHAND_AUTO, Animations.SPEAR_DASH, Animations.SPEAR_ONEHAND_AIR_SLASH)
 			.newStyleCombo(Styles.TWO_HAND, Animations.SPEAR_TWOHAND_AUTO1, Animations.SPEAR_TWOHAND_AUTO2, Animations.SPEAR_DASH, Animations.SPEAR_TWOHAND_AIR_SLASH)
 			.newStyleCombo(Styles.MOUNT, Animations.SPEAR_MOUNT_ATTACK)
-			.specialAttack(Styles.ONE_HAND, Skills.HEARTPIERCER)
-			.specialAttack(Styles.TWO_HAND, Skills.SLAUGHTER_STANCE)
+			.specialAttack(Styles.ONE_HAND, Skills.HEARTPIERCER.apply(item))
+			.specialAttack(Styles.TWO_HAND, Skills.SLAUGHTER_STANCE.apply(item))
 			.livingMotionModifier(Styles.ONE_HAND, LivingMotions.RUN, Animations.BIPED_RUN_SPEAR)
 			.livingMotionModifier(Styles.TWO_HAND, LivingMotions.IDLE, Animations.BIPED_HOLD_SPEAR)
 			.livingMotionModifier(Styles.TWO_HAND, LivingMotions.WALK, Animations.BIPED_HOLD_SPEAR)
@@ -149,7 +149,7 @@ public class WeaponCapabilityPresets {
 			.hitSound(EpicFightSounds.BLADE_HIT)
 			.canBePlacedOffhand(false)
 			.newStyleCombo(Styles.TWO_HAND, Animations.GREATSWORD_AUTO1, Animations.GREATSWORD_AUTO2, Animations.GREATSWORD_DASH, Animations.GREATSWORD_AIR_SLASH)
-			.specialAttack(Styles.TWO_HAND, Skills.GIANT_WHIRLWIND)
+			.specialAttack(Styles.TWO_HAND, Skills.GIANT_WHIRLWIND.apply(item))
 			.livingMotionModifier(Styles.TWO_HAND, LivingMotions.IDLE, Animations.BIPED_HOLD_GREATSWORD)
 			.livingMotionModifier(Styles.TWO_HAND, LivingMotions.WALK, Animations.BIPED_HOLD_GREATSWORD)
 			.livingMotionModifier(Styles.TWO_HAND, LivingMotions.CHASE, Animations.BIPED_HOLD_GREATSWORD)
@@ -182,8 +182,8 @@ public class WeaponCapabilityPresets {
 			.newStyleCombo(Styles.SHEATH, Animations.KATANA_SHEATHING_AUTO, Animations.KATANA_SHEATHING_DASH, Animations.KATANA_SHEATH_AIR_SLASH)
 			.newStyleCombo(Styles.TWO_HAND, Animations.KATANA_AUTO1, Animations.KATANA_AUTO2, Animations.KATANA_AUTO3, Animations.SWORD_DASH, Animations.KATANA_AIR_SLASH)
 			.newStyleCombo(Styles.MOUNT, Animations.SWORD_MOUNT_ATTACK)
-			.specialAttack(Styles.SHEATH, Skills.FATAL_DRAW)
-			.specialAttack(Styles.TWO_HAND, Skills.FATAL_DRAW)
+			.specialAttack(Styles.SHEATH, Skills.FATAL_DRAW1.apply(item))
+			.specialAttack(Styles.TWO_HAND, Skills.FATAL_DRAW2.apply(item))
 			.livingMotionModifier(Styles.TWO_HAND, LivingMotions.IDLE, Animations.BIPED_HOLD_KATANA)
 			.livingMotionModifier(Styles.TWO_HAND, LivingMotions.KNEEL, Animations.BIPED_HOLD_KATANA)
 			.livingMotionModifier(Styles.TWO_HAND, LivingMotions.WALK, Animations.BIPED_WALK_UNSHEATHING)
@@ -215,7 +215,7 @@ public class WeaponCapabilityPresets {
 			.canBePlacedOffhand(false)
 			.newStyleCombo(Styles.TWO_HAND, Animations.LONGSWORD_AUTO1, Animations.LONGSWORD_AUTO2, Animations.LONGSWORD_AUTO3, Animations.TACHI_DASH, Animations.LONGSWORD_AIR_SLASH)
 			.newStyleCombo(Styles.MOUNT, Animations.SWORD_MOUNT_ATTACK)
-			.specialAttack(Styles.TWO_HAND, Skills.LETHAL_SLICING)
+			.specialAttack(Styles.TWO_HAND, Skills.LETHAL_SLICING.apply(item))
 			.livingMotionModifier(Styles.TWO_HAND, LivingMotions.IDLE, Animations.BIPED_HOLD_TACHI)
 			.livingMotionModifier(Styles.TWO_HAND, LivingMotions.KNEEL, Animations.BIPED_HOLD_TACHI)
 			.livingMotionModifier(Styles.TWO_HAND, LivingMotions.WALK, Animations.BIPED_HOLD_TACHI)
@@ -246,8 +246,8 @@ public class WeaponCapabilityPresets {
 			.newStyleCombo(Styles.TWO_HAND, Animations.LONGSWORD_AUTO1, Animations.LONGSWORD_AUTO2, Animations.LONGSWORD_AUTO3, Animations.LONGSWORD_DASH, Animations.LONGSWORD_AIR_SLASH)
 			.newStyleCombo(Styles.LIECHTENAUER, Animations.LONGSWORD_AUTO1, Animations.LONGSWORD_AUTO2, Animations.LONGSWORD_AUTO3, Animations.LONGSWORD_DASH, Animations.LONGSWORD_AIR_SLASH)
 			.newStyleCombo(Styles.MOUNT, Animations.SWORD_MOUNT_ATTACK)
-			.specialAttack(Styles.TWO_HAND, Skills.LIECHTENAUER)
-			.specialAttack(Styles.LIECHTENAUER, Skills.LIECHTENAUER)
+			.specialAttack(Styles.TWO_HAND, Skills.LIECHTENAUER1.apply(item))
+			.specialAttack(Styles.LIECHTENAUER, Skills.LIECHTENAUER2.apply(item))
 			.livingMotionModifier(Styles.TWO_HAND, LivingMotions.IDLE, Animations.BIPED_HOLD_GREATSWORD)
 			.livingMotionModifier(Styles.TWO_HAND, LivingMotions.WALK, Animations.BIPED_HOLD_GREATSWORD)
 			.livingMotionModifier(Styles.TWO_HAND, LivingMotions.CHASE, Animations.BIPED_HOLD_GREATSWORD)
@@ -279,14 +279,14 @@ public class WeaponCapabilityPresets {
 			.newStyleCombo(Styles.ONE_HAND, Animations.DAGGER_AUTO1, Animations.DAGGER_AUTO2, Animations.DAGGER_AUTO3, Animations.SWORD_DASH, Animations.DAGGER_AIR_SLASH)
 			.newStyleCombo(Styles.TWO_HAND, Animations.DAGGER_DUAL_AUTO1, Animations.DAGGER_DUAL_AUTO2, Animations.DAGGER_DUAL_AUTO3, Animations.DAGGER_DUAL_AUTO4, Animations.DAGGER_DUAL_DASH, Animations.DAGGER_DUAL_AIR_SLASH)
 			.newStyleCombo(Styles.MOUNT, Animations.SWORD_MOUNT_ATTACK)
-			.specialAttack(Styles.ONE_HAND, Skills.EVISCERATE)
-			.specialAttack(Styles.TWO_HAND, Skills.BLADE_RUSH);
+			.specialAttack(Styles.ONE_HAND, Skills.EVISCERATE.apply(item))
+			.specialAttack(Styles.TWO_HAND, Skills.BLADE_RUSH.apply(item));
 		
 		return builder;
 	};
 	public static final Function<Item, CapabilityItem.Builder> FIST = (item) -> WeaponCapability.builder()
 			.newStyleCombo(Styles.ONE_HAND, Animations.FIST_AUTO1, Animations.FIST_AUTO2, Animations.FIST_AUTO3, Animations.FIST_DASH, Animations.FIST_AIR_SLASH)
-			.specialAttack(Styles.ONE_HAND, Skills.RELENTLESS_COMBO)
+			.specialAttack(Styles.ONE_HAND, Skills.RELENTLESS_COMBO.apply(item))
 			.category(WeaponCategories.FIST)
 			.constructor(KnuckleCapability::new);
 	

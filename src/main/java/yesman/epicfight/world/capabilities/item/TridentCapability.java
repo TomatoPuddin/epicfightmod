@@ -55,7 +55,7 @@ public class TridentCapability extends RangedWeaponCapability {
 	}
 	
 	@Override
-	public List<StaticAnimation> getAutoAttckMotion(PlayerPatch<?> playerpatch) {
+	public List<StaticAnimation> getAutoAttckMotion(LivingEntityPatch<?> playerpatch) {
 		return attackMotion;
 	}
 	
