@@ -199,13 +199,13 @@
 	
 	"skill.epicfight.damage" : "%s damage",
 
-	"skill.epicfight.extra_damage.target_lost_health" : "append %s% of the target lost health as damage",
-	"skill.epicfight.extra_damage.target_health" : "append %s% of the target health as damage",
-	"skill.epicfight.extra_damage.target_max_health" : "append %s% of the target lost health as damage",
+	"skill.epicfight.extra_damage.target_lost_health" : "append %s%% of the target lost health as damage",
+	"skill.epicfight.extra_damage.target_health" : "append %s%% of the target health as damage",
+	"skill.epicfight.extra_damage.target_max_health" : "append %s%% of the target lost health as damage",
 
-	"skill.epicfight.extra_damage.attacker_lost_health" : "append %s% of the attacker lost health as damage",
-	"skill.epicfight.extra_damage.attacker_health" : "append %s% of the attacker lost health as damage",
-	"skill.epicfight.extra_damage.attacker_max_health" : "append %s% of the attacker lost health as damage",
+	"skill.epicfight.extra_damage.attacker_lost_health" : "append %s%% of the attacker lost health as damage",
+	"skill.epicfight.extra_damage.attacker_health" : "append %s%% of the attacker lost health as damage",
+	"skill.epicfight.extra_damage.attacker_max_health" : "append %s%% of the attacker lost health as damage",
 
-	"skill.epicfight.extra_damage.attacker_xp_level" : "append %s% of the attacker xp level as damage",
-	"skill.epicfight.extra_damage.attacker_hunger" : "append %s% of the attacker hunger as damage"}
+	"skill.epicfight.extra_damage.attacker_xp_level" : "append %s%% of the attacker xp level as damage",
+	"skill.epicfight.extra_damage.attacker_hunger" : "append %s%% of the attacker hunger as damage"}

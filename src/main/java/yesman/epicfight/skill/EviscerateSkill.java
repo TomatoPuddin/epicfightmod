@@ -57,8 +57,8 @@ public class EviscerateSkill extends SpecialAttackSkill {
 	@Override
 	public List<Component> getTooltipOnItem(ItemStack itemStack, CapabilityItem cap, PlayerPatch<?> playerCap) {
 		List<Component> list = super.getTooltipOnItem(itemStack, cap, playerCap);
-		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(0), "First Strike:");
-		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(1), "Second Strike:");
+		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(0), "skill.epicfight.tooltip.first_strike");
+		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(1), "skill.epicfight.tooltip.second_strike");
 		return list;
 	}
 	

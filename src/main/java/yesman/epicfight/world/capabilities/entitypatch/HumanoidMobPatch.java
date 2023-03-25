@@ -95,7 +95,7 @@ public abstract class HumanoidMobPatch<T extends PathfinderMob> extends MobPatch
 	protected CombatBehaviors.Builder<HumanoidMobPatch<?>> getHoldingItemWeaponMotionBuilder() {
 		CapabilityItem itemCap = this.getHoldingItemCapability(InteractionHand.MAIN_HAND);
 		
-		if (this.weaponAttackMotions.containsKey(itemCap.getWeaponCategory())) {
+		if (this.weaponAttackMotions != null && this.weaponAttackMotions.containsKey(itemCap.getWeaponCategory())) {
 			Map<Style, CombatBehaviors.Builder<HumanoidMobPatch<?>>> motionByStyle = this.weaponAttackMotions.get(itemCap.getWeaponCategory());
 			Style style = itemCap.getStyle(this);
 			

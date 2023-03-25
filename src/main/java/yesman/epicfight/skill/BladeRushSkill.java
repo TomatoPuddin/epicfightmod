@@ -106,8 +106,8 @@ public class BladeRushSkill extends SpecialAttackSkill {
 	@Override
 	public List<Component> getTooltipOnItem(ItemStack itemStack, CapabilityItem cap, PlayerPatch<?> playerCap) {
 		List<Component> list = super.getTooltipOnItem(itemStack, cap, playerCap);
-		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(0), "Each Strike:");
-		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(1), "Last Strike:");
+		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(0), "skill.epicfight.tooltip.each_strike");
+		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(1), "skill.epicfight.tooltip.last_strike");
 		return list;
 	}
 	

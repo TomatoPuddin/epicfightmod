@@ -93,6 +93,8 @@ public class ExtraDamageType {
 
 	public void getTooltip(List<Component> list) {
 		for(Map.Entry<CalculatorType, int[]> entry: this.calculatorList) {
+			if(entry.getValue()[0] <= 0)
+				continue;
 			Object[] args = Arrays.stream(entry.getValue()).mapToObj(i -> (Object)new TextComponent(String.valueOf(i)).withStyle(ChatFormatting.RED)).toArray();
 			list.add(new TranslatableComponent(entry.getKey().getTooltip(), args).withStyle(ChatFormatting.DARK_GRAY));
 		}

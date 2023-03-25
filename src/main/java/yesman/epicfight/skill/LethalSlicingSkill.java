@@ -56,8 +56,8 @@ public class LethalSlicingSkill extends SpecialAttackSkill {
 	@Override
 	public List<Component> getTooltipOnItem(ItemStack itemStack, CapabilityItem cap, PlayerPatch<?> playerCap) {
 		List<Component> list = super.getTooltipOnItem(itemStack, cap, playerCap);
-		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(0), "Elbow:");
-		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(1), "Each Strike:");
+		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(0), "skill.epicfight.tooltip.elbow_strike");
+		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(1), "skill.epicfight.tooltip.each_strike");
 		return list;
 	}
 	

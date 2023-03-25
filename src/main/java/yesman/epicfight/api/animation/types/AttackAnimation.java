@@ -239,10 +239,10 @@ public class AttackAnimation extends ActionAnimation {
 	
 	@Override
 	protected void onLoaded() {
-		if (!this.getProperty(AttackAnimationProperty.LOCK_ROTATION).orElse(false)) {
+		//if (!this.getProperty(AttackAnimationProperty.LOCK_ROTATION).orElse(false)) {
 			this.stateSpectrumBlueprint.newTimePair(0.0F, Float.MAX_VALUE).addStateRemoveOld(EntityState.TURNING_LOCKED, false);
-		}
-		
+		//}
+
 		super.onLoaded();
 	}
 	

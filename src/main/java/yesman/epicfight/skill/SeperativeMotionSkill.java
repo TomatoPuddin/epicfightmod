@@ -31,7 +31,7 @@ public class SeperativeMotionSkill extends SpecialAttackSkill {
 	@Override
 	public List<Component> getTooltipOnItem(ItemStack itemStack, CapabilityItem cap, PlayerPatch<?> playerCap) {
 		List<Component> list = super.getTooltipOnItem(itemStack, cap, playerCap);
-		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(0), "Each Strikes:");
+		this.generateTooltipforPhase(list, itemStack, cap, playerCap, this.properties.get(0), "skill.epicfight.tooltip.each_strike");
 		
 		return list;
 	}
