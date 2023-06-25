@@ -1,6 +1,6 @@
 modLoader="javafml"
 loaderVersion="[40,)"
-license="LGPL2.1"
+license="MIT License"
 [[mods]]
 modId="epicfight"
 version = "${file.jarVersion}"
