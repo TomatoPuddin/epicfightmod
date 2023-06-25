@@ -259,21 +259,21 @@ public class MobPatchReloadListener extends SimpleJsonResourceReloadListener {
 				provider.modelLocation = new ResourceLocation(tag.getString("model"));
 				provider.defaultAnimations = deserializeDefaultAnimations(tag.getCompound("default_livingmotions"));
 				provider.faction = Faction.valueOf(tag.getString("faction").toUpperCase(Locale.ROOT));
-				provider.scale = tag.getCompound("attributes").contains("scale") ? (float)tag.getCompound("attributes").getDouble("scale") : 1.0F;
-				
-				if (!clientSide) {
-					provider.stunAnimations = deserializeStunAnimations(tag.getCompound("stun_animations"));
-					provider.chasingSpeed = tag.getCompound("attributes").getDouble("chasing_speed");
-					
-					if (humanoid) {
-						CustomHumanoidMobPatchProvider humanoidProvider = (CustomHumanoidMobPatchProvider)provider;
-						humanoidProvider.humanoidCombatBehaviors = deserializeHumanoidCombatBehaviors(tag.getList("combat_behavior", 10));
-						humanoidProvider.humanoidWeaponMotions = deserializeHumanoidWeaponMotions(tag.getList("humanoid_weapon_motions", 10));
-					} else {
-						provider.combatBehaviorsBuilder = deserializeCombatBehaviorsBuilder(tag.getList("combat_behavior", 10));
-					}
+				provider.scale = tag.getCompound("attributes").contains("scale") ? (float) tag.getCompound("attributes").getDouble("scale") : 1.0F;
+
+				//if (!clientSide) {
+				provider.stunAnimations = deserializeStunAnimations(tag.getCompound("stun_animations"));
+				provider.chasingSpeed = tag.getCompound("attributes").getDouble("chasing_speed");
+
+				if (humanoid) {
+					CustomHumanoidMobPatchProvider humanoidProvider = (CustomHumanoidMobPatchProvider) provider;
+					humanoidProvider.humanoidCombatBehaviors = deserializeHumanoidCombatBehaviors(tag.getList("combat_behavior", 10));
+					humanoidProvider.humanoidWeaponMotions = deserializeHumanoidWeaponMotions(tag.getList("humanoid_weapon_motions", 10));
+				} else {
+					provider.combatBehaviorsBuilder = deserializeCombatBehaviorsBuilder(tag.getList("combat_behavior", 10));
 				}
-				
+				//}
+
 				return provider;
 			}
 		}
